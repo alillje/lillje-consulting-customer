@@ -12,23 +12,28 @@ const Login = () => {
 
     const loginHandler = async (event) => {
         event.preventDefault();
-        console.log(username, password)
+
+        const user = {
+          username: username,
+          password: password
+        }
 
         try {
-            const config = {
-                headers: {
-                    "Content-type":"application/json"
-                }
-            }
-
-            const response = await fetch('/api/v1')
-            const json = await response.json();
-            console.log(json)
+          const response = await fetch("api/v1/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+          });
+    
+          const json = await response.json();
+          console.log(json);
         } catch (error) {
-            console.log(error)
-
+          console.log(error);
         }
-    }
+      };
+    
 
     return (
         <div className="loginContainer">
