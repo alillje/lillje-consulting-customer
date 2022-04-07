@@ -1,4 +1,4 @@
-.loginContainer {
+.registerContainer {
     margin-top: 5%;
     display: flex;
     width: 100%;
@@ -8,23 +8,23 @@
     flex-wrap: wrap;;
 }
 
-.loginTitle {
+.registerTitle {
     width: 100%;
     text-align: center;
     margin-bottom: 5%;
 }
 
-.loginFormContainer {
+.registerFormContainer {
     width: 40%
 
 }
 
-.loginFormContainer button {
+.registerFormContainer button {
     background-color: #863d3d;
     border: none;
 }
 
-.loginFormContainer button:hover {
+.registerFormContainer button:hover {
     background-color: #a06868;
     border: none;
 }

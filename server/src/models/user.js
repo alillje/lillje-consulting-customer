@@ -30,20 +30,6 @@ const schema = new mongoose.Schema({
     writeOnly: true,
     required: [true, 'Password is required.']
   },
-  firstName: {
-    type: String,
-    minLength: [1, 'The first name must be of minimum length 10 characters.'],
-    maxLength: [256, 'The first name must be of maximum length 256 characters.'],
-    required: [true, 'First name is required.'],
-    trim: true
-  },
-  lastName: {
-    type: String,
-    minLength: [1, 'The last name must be of minimum length 10 characters.'],
-    maxLength: [256, 'The laast name must be of maximum length 256 characters.'],
-    required: [true, 'Last name is required.'],
-    trim: true
-  },
   email: {
     type: String,
     required: [true, 'Email address is required.'],

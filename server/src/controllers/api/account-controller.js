@@ -29,8 +29,6 @@ export class AccountController {
       const payload = {
         sub: user.id,
         username: user.username,
-        given_name: user.firstName,
-        family_name: user.lastName,
         email: user.email
       }
       // Create the access token with the shorter lifespan.
@@ -62,7 +60,7 @@ export class AccountController {
   async register (req, res, next) {
     try {
       // Check all required fields exist before making request to DB.
-      if (!req.body.username || !req.body.password || !req.body.firstName || !req.body.lastName || !req.body.email) {
+      if (!req.body.username || !req.body.password || !req.body.email) {
         const error = new Error('Validation error')
         error.name = 'ValidationError'
         throw error
@@ -71,8 +69,6 @@ export class AccountController {
       const user = new User({
         username: req.body.username.toLowerCase(),
         password: req.body.password,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
         email: req.body.email
       })
 
@@ -82,6 +78,7 @@ export class AccountController {
         .status(201)
         .json({ id: user.id })
     } catch (err) {
+      console.log(err)
       let error = err
 
       if (error.code === 11000) {

@@ -6,6 +6,8 @@ import Header from "./components/header/header"
 // pages
 
 import Login from './pages/login/login'
+import Register from './pages/register/register'
+
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <main>
           <Routes>
             <Route exact path="/login" element={<Login />} />
+            <Route exact path="/register" element={<Register />} />
+
           </Routes>
         </main>
         </div>
