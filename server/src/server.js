@@ -12,6 +12,7 @@ import { router } from './routes/router.js'
 import { connectDB } from './config/mongoose.js'
 
 try {
+  
   await connectDB()
 
   const app = express()
