@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
+
+
 import './login.css'
 
 // Bootstrap
@@ -8,6 +12,8 @@ import Button from 'react-bootstrap/Button'
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [authToken, setAuthToken] = useState(null)
+    const [user, setUser] = useState(null);
     const [error, setError] = useState(false);
 
     const loginHandler = async (event) => {
@@ -19,16 +25,23 @@ const Login = () => {
         }
         // Request auth
         try {
-          const response = await fetch("http://localhost:5000/api/v1/login", {
+          const response = await fetch("/api/v1/login", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(user),
           });
+          
     
-          const json = await response.json();
-          console.log(json);
+          const data = await response.json();
+          if (response === 200) {
+          localStorage.setItem("lc_ab_mb_token", data.access_token);
+          setAuthToken(data)
+          setUser(data.access_token)
+          }
+
+          console.log(data);
         } catch (error) {
           console.log(error);
         }
