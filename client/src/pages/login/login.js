@@ -19,7 +19,7 @@ const Login = () => {
         }
         // Request auth
         try {
-          const response = await fetch("api/v1/login", {
+          const response = await fetch("http://localhost:5000/api/v1/login", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -63,7 +63,7 @@ const Login = () => {
   </Form.Group>
 
   <Button variant="secondary" type="submit">
-    Logga in..
+    Logga in
   </Button>
 </Form>
 </div>
