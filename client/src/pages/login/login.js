@@ -17,7 +17,7 @@ const Login = () => {
           username: username,
           password: password
         }
-
+        // Request auth
         try {
           const response = await fetch("api/v1/login", {
             method: "POST",
@@ -63,7 +63,7 @@ const Login = () => {
   </Form.Group>
 
   <Button variant="secondary" type="submit">
-    Logga in
+    Logga in..
   </Button>
 </Form>
 </div>
