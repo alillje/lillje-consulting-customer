@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
+import ProtectedRoute from './utils/private-route'
 import Header from "./components/header/header"
 
 // pages
@@ -18,8 +18,10 @@ function App() {
         <main>
           <Routes>
             <Route exact path="/login" element={<Login />} />
-            <Route exact path="/register" element={<Register />} />
-
+            {/* Protected routes */}
+            <Route exact path='/register' element={<ProtectedRoute/>}>
+              <Route exact path='/register' element={<Register/>}/>
+            </Route>
           </Routes>
         </main>
         </div>
