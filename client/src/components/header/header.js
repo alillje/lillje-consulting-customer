@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./header.css";
 import { NavLink } from 'react-router-dom';
+import AuthContext from '../../context/auth-context'
 
 
 import Logo from './img/lillje-consulting-logo-1.svg';
@@ -12,6 +13,7 @@ import Logo from './img/lillje-consulting-logo-1.svg';
  * @return {*} 
  */
 const Header = (props) => {
+
   return (
     <div className="headerContainer">
         <div className="headerLogo">
