@@ -8,9 +8,11 @@ export default AuthContext;
 
 
 export const AuthProvider = ({children}) => {
-    let [authToken, setAuthToken] = useState(null)
-    let [user, setUser] = useState(null)
+    // let [authToken, setAuthToken] = useState(localStorage.getItem(('lc_ab_mb_token') ? localStorage.getItem('lc_ab_mb_token') : null));
+    // let [user, setUser] = useState(localStorage.getItem('lc_ab_mb_token') ? jwt_decode(localStorage.getItem('lc_ab_mb_token')) : null)
 
+    let [authToken, setAuthToken] = useState(() => localStorage.getItem(('lc_ab_mb_token') ? localStorage.getItem('lc_ab_mb_token') : null));
+    let [user, setUser] = useState(() => localStorage.getItem('lc_ab_mb_token') ? jwt_decode(localStorage.getItem('lc_ab_mb_token')) : null);
 
     const navigate = useNavigate()
 
@@ -32,14 +34,14 @@ export const AuthProvider = ({children}) => {
           
     
           const data = await response.json();
+          const user = jwt_decode(data.access_token)
           if (response.status === 200) {
-          localStorage.setItem("lc_ab_mb_token", data.access_token);
           setAuthToken(data)
-          setUser(jwt_decode(data.access_token))
+          setUser(user)
+          localStorage.setItem('lc_ab_mb_token', data.access_token);
           navigate('/register')
-
-
           }
+
 
         } catch (error) {
           console.log(error);
@@ -49,6 +51,7 @@ export const AuthProvider = ({children}) => {
         user: user,
         loginUser: loginUser
     }
+
 
 
     return (
