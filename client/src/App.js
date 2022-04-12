@@ -11,11 +11,9 @@ import Login from "./pages/login/login";
 import Register from "./pages/register/register";
 import Dashboard from "./pages/dashboard/dashboard";
 
-import Sidebar from './components/sidebar/sidebar'
-
+import Sidebar from "./components/sidebar/sidebar";
 
 function App() {
-
   return (
     <Router>
       <AuthProvider>
@@ -30,7 +28,6 @@ function App() {
 
               {/* Protected routes */}
               <Route exact path="/dashboard" element={<ProtectedRoute />}>
-
                 <Route exact path="/dashboard" element={<Dashboard />} />
               </Route>
             </Routes>

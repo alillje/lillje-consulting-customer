@@ -9,47 +9,37 @@ import "./login.css";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
+import { useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
+import { login } from '../../reducers/user'
+
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  let { contextData } = useContext(AuthContext);
+  const user = useSelector((state) => state.user.user)
+  const dispatch = useDispatch()
+  const handleLogin = (event) => {
+    event.preventDefault()
+    dispatch(login({ user: event.target.username.value }))
+    console.log('login')
+  }
+
+  console.log(user)
 
   return (
     <div className="loginContainer">
-      <div className="loginTitle">
-        <h2>Logga in</h2>
-      </div>
-      <div className="loginFormContainer">
-        <Form className="loginForm" onSubmit={contextData.loginUser}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Användarnamn</Form.Label>
-            <Form.Control
-              value={username}
-              name="username"
-              onChange={(event) => setUsername(event.target.value)}
-              type="username"
-              placeholder="Användarnamn"
-            />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
+      <form onSubmit={handleLogin}>
+        <label htmlFor="username">Username{user}</label>
+        <input value={username} onChange={(event) => setUsername(event.target.value)} type="text" name="username" className=""></input>
+        <label htmlFor="password">Password</label>
 
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Lösenord</Form.Label>
-            <Form.Control
-              name="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              type="password"
-              placeholder="Lösenord"
-            />
-          </Form.Group>
-
-          <Button variant="secondary" type="submit">
-            Logga in
-          </Button>
-        </Form>
-      </div>
+        <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" name="password" className=""></input>
+        <button type="submit" name="submit" className="">
+          Logga in
+        </button>
+      </form>
     </div>
   );
 };
