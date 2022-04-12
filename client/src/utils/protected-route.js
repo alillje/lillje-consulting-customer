@@ -16,6 +16,8 @@ const ProtectedRoute = () => {
         auth = true;
     }
 
+    console.log(auth)
+
     return auth ? <Outlet /> : <Navigate to="/login" />;
 }
 

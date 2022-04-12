@@ -17,7 +17,7 @@ const Header = (props) => {
   return (
     <div className="headerContainer">
         <div className="headerLogo">
-            <NavLink to="/">
+            <NavLink to="/dashboard">
             <img src={Logo} alt="logo" className="headerLogo"></img>
             </NavLink>
 

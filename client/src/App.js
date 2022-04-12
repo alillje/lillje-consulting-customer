@@ -9,8 +9,13 @@ import { AuthProvider } from "./context/auth-context";
 import Home from "./pages/home/home";
 import Login from "./pages/login/login";
 import Register from "./pages/register/register";
+import Dashboard from "./pages/dashboard/dashboard";
+
+import Sidebar from './components/sidebar/sidebar'
+
 
 function App() {
+
   return (
     <Router>
       <AuthProvider>
@@ -19,12 +24,14 @@ function App() {
 
           <main>
             <Routes>
+              <Route exact path="/" element={<Login />} />
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/register" element={<Register />} />
 
               {/* Protected routes */}
-              <Route exact path="/" element={<ProtectedRoute />}>
-                <Route exact path="/" element={<Home />} />
+              <Route exact path="/dashboard" element={<ProtectedRoute />}>
+
+                <Route exact path="/dashboard" element={<Dashboard />} />
               </Route>
             </Routes>
           </main>
