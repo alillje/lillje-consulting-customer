@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import AuthContext from "../../context/auth-context";
 
@@ -18,17 +18,60 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const user = useSelector((state) => state.user.user)
+  const [authToken, setAuthToken] = useState(null)
+  const [user, setUser] = useState(null);
+
+  const navigate = useNavigate()
+
+
+
   const dispatch = useDispatch()
-  const handleLogin = (event) => {
+
+/**
+ * Handles login. Contacts auth service. 
+ * Set state i redux.
+ *
+ * @param {Object} event - an event Object
+ */
+const handleLogin = async (event) => {
     event.preventDefault()
-    dispatch(login({ user: event.target.username.value }))
-    console.log('login')
+
+    const userData = {
+      username: event.target.username.value,
+      password: event.target.password.value,
+
+    }
+    // Request auth
+    try {
+      const response = await fetch("/api/v1/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      const data = await response.json();
+      if (response === 200) {
+      localStorage.setItem("lc_ab_mb_token", data.access_token);
+      setAuthToken(data)
+      setUser(jwt_decode(data.access_token))
+      }
+      dispatch(login({ user: jwt_decode(data.access_token) }))
+
+      navigate('/dashboard')
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+
   }
+  const userLoggedIn = useSelector((state) => state.user.auth)
 
-  console.log(user)
 
-  return (
+
+  return ( 
+    userLoggedIn ? <Navigate to="/dashboard" /> :
     <div className="loginContainer">
       <form onSubmit={handleLogin}>
         <label htmlFor="username">Username{user}</label>
@@ -41,6 +84,7 @@ const Login = () => {
         </button>
       </form>
     </div>
+  
   );
 };
 
