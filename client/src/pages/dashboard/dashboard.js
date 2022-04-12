@@ -14,6 +14,7 @@ const Dashboard = () => {
     const handleLogout = () => {
         localStorage.removeItem('lc_ab_mb_token')
         dispatch(logout())
+        // Remove refresh token from database here
 
     }
 

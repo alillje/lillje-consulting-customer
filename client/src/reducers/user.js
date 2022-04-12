@@ -4,7 +4,7 @@ export const userSlice = createSlice({
     name: 'user',
     initialState: {
         user: localStorage.getItem('lc_ab_mb_token') ? localStorage.getItem('lc_ab_mb_token') : null,
-        auth: false
+        auth: localStorage.getItem('lc_ab_mb_token') ? true : false
 },
     reducers: {
         login: (state, action) => {
