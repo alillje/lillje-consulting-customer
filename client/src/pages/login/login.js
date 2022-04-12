@@ -1,64 +1,60 @@
-import { useState, useContext } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useState, useContext } from "react";
+import { Navigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import AuthContext from '../../context/auth-context'
+import AuthContext from "../../context/auth-context";
 
-
-
-import './login.css'
+import "./login.css";
 
 // Bootstrap
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  let { contextData } = useContext(AuthContext);
 
-  let { contextData } = useContext(AuthContext)
+  return (
+    <div className="loginContainer">
+      <div className="loginTitle">
+        <h2>Logga in</h2>
+      </div>
+      <div className="loginFormContainer">
+        <Form className="loginForm" onSubmit={contextData.loginUser}>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Användarnamn</Form.Label>
+            <Form.Control
+              value={username}
+              name="username"
+              onChange={(event) => setUsername(event.target.value)}
+              type="username"
+              placeholder="Användarnamn"
+            />
+            <Form.Text className="text-muted"></Form.Text>
+          </Form.Group>
 
-    
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Lösenord</Form.Label>
+            <Form.Control
+              name="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              type="password"
+              placeholder="Lösenord"
+            />
+          </Form.Group>
 
-    return (
-        <div className="loginContainer">
-            <div className="loginTitle">
-            <h2>Logga in</h2>
-            </div>
-            <div className="loginFormContainer">
-    <Form className="loginForm" onSubmit={contextData.loginUser}>
-  <Form.Group className="mb-3" controlId="formBasicEmail">
-    <Form.Label>Användarnamn</Form.Label>
-    <Form.Control 
-value={username} name="username"
-onChange={(event) => setUsername(event.target.value)}
-    type="username" 
-    placeholder="Användarnamn" />
-    <Form.Text className="text-muted">
-    </Form.Text>
-  </Form.Group>
-
-  <Form.Group className="mb-3" controlId="formBasicPassword">
-    <Form.Label>Lösenord</Form.Label>
-    <Form.Control 
-    name="password"
-value={password} 
-onChange={(event) => setPassword(event.target.value)}
-    type="password" 
-    placeholder="Lösenord" />
-  </Form.Group>
-
-  <Button variant="secondary" type="submit">
-    Logga in
-  </Button>
-</Form>
-</div>
-</div>
-    )
-}
+          <Button variant="secondary" type="submit">
+            Logga in
+          </Button>
+        </Form>
+      </div>
+    </div>
+  );
+};
 
 export default Login;
-
 
 // let {loginUser} = useContext(AuthContext)}
 // const [username, setUsername] = useState("");
@@ -83,7 +79,6 @@ export default Login;
 //         },
 //         body: JSON.stringify(user),
 //       });
-      
 
 //       const data = await response.json();
 //       if (response === 200) {
@@ -107,10 +102,10 @@ export default Login;
 // <Form className="loginForm" onSubmit={loginHandler}>
 // <Form.Group className="mb-3" controlId="formBasicEmail">
 // <Form.Label>Användarnamn</Form.Label>
-// <Form.Control 
-// type="username" 
-// placeholder="Användarnamn" 
-// value={username} 
+// <Form.Control
+// type="username"
+// placeholder="Användarnamn"
+// value={username}
 // onChange={(event) => setUsername(event.target.value)} />
 // <Form.Text className="text-muted">
 // </Form.Text>
@@ -118,10 +113,10 @@ export default Login;
 
 // <Form.Group className="mb-3" controlId="formBasicPassword">
 // <Form.Label>Lösenord</Form.Label>
-// <Form.Control 
-// type="password" 
+// <Form.Control
+// type="password"
 // placeholder="Lösenord"
-// value={password} 
+// value={password}
 // onChange={(event) => setPassword(event.target.value)} />
 // </Form.Group>
 
@@ -132,3 +127,46 @@ export default Login;
 // </div>
 // </div>
 // )
+
+// const Login = () => {
+//   const [username, setUsername] = useState("");
+//   const [password, setPassword] = useState("");
+
+//   let { contextData } = useContext(AuthContext)
+
+//     return (
+//         <div className="loginContainer">
+//             <div className="loginTitle">
+//             <h2>Logga in</h2>
+//             </div>
+//             <div className="loginFormContainer">
+//     <Form className="loginForm" onSubmit={contextData.loginUser}>
+//   <Form.Group className="mb-3" controlId="formBasicEmail">
+//     <Form.Label>Användarnamn</Form.Label>
+//     <Form.Control
+// value={username} name="username"
+// onChange={(event) => setUsername(event.target.value)}
+//     type="username"
+//     placeholder="Användarnamn" />
+//     <Form.Text className="text-muted">
+//     </Form.Text>
+//   </Form.Group>
+
+//   <Form.Group className="mb-3" controlId="formBasicPassword">
+//     <Form.Label>Lösenord</Form.Label>
+//     <Form.Control
+//     name="password"
+// value={password}
+// onChange={(event) => setPassword(event.target.value)}
+//     type="password"
+//     placeholder="Lösenord" />
+//   </Form.Group>
+
+//   <Button variant="secondary" type="submit">
+//     Logga in
+//   </Button>
+// </Form>
+// </div>
+// </div>
+//     )
+// }
