@@ -4,11 +4,11 @@ import ProtectedRoute from "./utils/protected-route";
 import Header from "./components/header/header";
 import { AuthProvider } from "./context/auth-context";
 
-// pages
-
-import Home from "./pages/home/home";
+// Pages
 import Login from "./pages/login/login";
 import Register from "./pages/register/register";
+import Dashboard from "./pages/dashboard/dashboard";
+
 
 function App() {
   return (
@@ -19,12 +19,13 @@ function App() {
 
           <main>
             <Routes>
+              <Route exact path="/" element={<Login />} />
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/register" element={<Register />} />
 
               {/* Protected routes */}
-              <Route exact path="/" element={<ProtectedRoute />}>
-                <Route exact path="/" element={<Home />} />
+              <Route exact path="/dashboard" element={<ProtectedRoute />}>
+                <Route exact path="/dashboard" element={<Dashboard />} />
               </Route>
             </Routes>
           </main>

@@ -39,7 +39,7 @@ export const AuthProvider = ({children}) => {
           setAuthToken(data)
           setUser(user)
           localStorage.setItem('lc_ab_mb_token', data.access_token);
-          navigate('/register')
+          navigate('/dashboard')
           }
 
 
@@ -51,8 +51,6 @@ export const AuthProvider = ({children}) => {
         user: user,
         loginUser: loginUser
     }
-
-
 
     return (
         <AuthContext.Provider value={{contextData}}>
