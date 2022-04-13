@@ -4,14 +4,11 @@ import ProtectedRoute from "./utils/protected-route";
 import Header from "./components/header/header";
 import { AuthProvider } from "./context/auth-context";
 
-// pages
-
-import Home from "./pages/home/home";
+// Pages
 import Login from "./pages/login/login";
 import Register from "./pages/register/register";
 import Dashboard from "./pages/dashboard/dashboard";
 
-import Sidebar from "./components/sidebar/sidebar";
 
 function App() {
   return (

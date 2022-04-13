@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+// Create a user slice with different actions
 export const userSlice = createSlice({
     name: 'user',
     initialState: {

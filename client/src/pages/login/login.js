@@ -1,14 +1,11 @@
+import "./login.css";
 import { useState, useContext } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import AuthContext from "../../context/auth-context";
 
-import "./login.css";
 
-// Bootstrap
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-
+// Import redux config
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { login } from "../../reducers/user";
