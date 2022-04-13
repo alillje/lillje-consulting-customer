@@ -14,7 +14,6 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [authToken, setAuthToken] = useState(null);
   const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
@@ -41,14 +40,14 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify(userData)
       });
 
       const data = await response.json();
 
       if (response.status === 200) {
         localStorage.setItem("lc_ab_mb_token", data.access_token);
-        dispatch(login({ user: jwt_decode(data.access_token) }));
+        dispatch(login({ user: jwt_decode(data.access_token), refresh_token: data.refresh_token}));
 
       }
 

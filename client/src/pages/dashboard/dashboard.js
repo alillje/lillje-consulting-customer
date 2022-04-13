@@ -1,31 +1,32 @@
-import { useContext } from 'react';
-import AuthContext from '../../context/auth-context';
-import Sidebar from '../../components/sidebar/sidebar'
-import { useSelector, useDispatch } from "react-redux"
-import { logout } from '../../reducers/user'
+import { useContext } from "react";
+import AuthContext from "../../context/auth-context";
 import "./dashboard.css";
-
+import Sidebar from "../../components/sidebar/sidebar";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutHandler } from "../../services/logout-service";
+import { logout } from "../../reducers/user";
 
 const Dashboard = () => {
-    // let { contextData } = useContext(AuthContext)
-    const user = useSelector((state) => state.user.user)
-    const dispatch = useDispatch()
+  // let { contextData } = useContext(AuthContext)
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-    const handleLogout = () => {
-        localStorage.removeItem('lc_ab_mb_token')
-        dispatch(logout())
-        // Remove refresh token from database here
+  const handleLogout = () => {
+    logoutHandler(user);
+    localStorage.removeItem("lc_ab_mb_token");
+    dispatch(logout());
+    // Remove refresh token from database here
+  };
 
-    }
-
-    return (
-        <div>
-            <Sidebar></Sidebar>
-                <h1>Welcome, {user.username}</h1>
-                <div className="logoutDiv" onClick={handleLogout}>Logga ut</div>
-        </div>
-    )
-  
+  return (
+    <div>
+      <Sidebar></Sidebar>
+      <h1>Welcome, {user.user.username}</h1>
+      <div className="logoutDiv" onClick={handleLogout}>
+        Logga ut
+      </div>
+    </div>
+  );
 };
 
 export default Dashboard;
