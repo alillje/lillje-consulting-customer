@@ -1,32 +1,60 @@
-import React, { useContext } from "react";
-import { Route, Navigate, Outlet } from "react-router-dom";
-import AuthContext from "../context/auth-context";
+import { useEffect, useState } from "react";
+import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { refresh, logout } from "../redux/reducers/user";
+
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const ProtectedRoute = () => {
-  let auth = false; // determine if authorized, from context or however you're doing it
-  // If authorized, return an outlet that will render child elements
-  // If not, return element that will navigate to login page
+  // let auth = false;
+  let [auth, setAuth] = useState(false);
 
-  // let { contextData } = useContext(AuthContext)
+  const state = useSelector((state) => state);
 
-  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  if (user.auth) {
+  useEffect(() => {
+    // Check expiry time of access_token and refresh if necessary
+    let timeNow = Math.floor(Date.now().valueOf() / 1000);
+    if (state.user.user?.exp - timeNow < 5) {
+      const refreshToken = async () => {
+        try {
+          const configBody = JSON.stringify({
+            refreshToken: state.user.refreshToken,
+          });
+          const res = await axios.post("/api/v1/refresh", configBody, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          console.log(res);
+
+          if (res.status === 200) {
+            localStorage.setItem("lc_ab_mb_token", res.data.access_token);
+            dispatch(
+              refresh({
+                user: jwt_decode(res.data.access_token),
+                refresh_token: res.data.refresh_token,
+              })
+            );
+            setAuth(true);
+          }
+        } catch (error) {
+          setAuth(false);
+          dispatch(logout());
+        }
+      };
+      refreshToken();
+    }
+  }, [state, dispatch]);
+
+  if (state.user?.auth) {
     auth = true;
   }
-
+  console.log('PROTECTED ROUTE')
   return auth ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;
-
-// const ProtectedRoute = ({children, ...rest}) => {
-//     const auth = false
-
-//     return (
-//         <Route {...rest}>{!auth ? <Navigate to="/login" /> : children}</Route>
-//     )
-// }
-
-// export default ProtectedRoute;

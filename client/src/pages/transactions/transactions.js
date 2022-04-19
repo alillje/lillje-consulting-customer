@@ -1,10 +1,10 @@
-import "./dashboard.css";
+import "./transactions.css";
 import Sidebar from "../../components/sidebar/sidebar";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutHandler } from "../../services/logout-service";
 import { logout } from "../../redux/reducers/user";
 
-const Dashboard = () => {
+const Transactions = () => {
   // let { contextData } = useContext(AuthContext)
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h1>Welcome to dashboard, {user.user?.username}</h1>
+      <h1>Welcome to transaktioner, {user.user?.username}</h1>
       <div className="logoutDiv" onClick={handleLogout}>
         Logga ut
       </div>
@@ -26,4 +26,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Transactions;
