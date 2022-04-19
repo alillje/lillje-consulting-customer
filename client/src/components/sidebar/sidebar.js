@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
-import Nav from "react-bootstrap/Nav";
+import React from "react";
 import "./sidebar.css";
-import { NavLink } from "react-router-dom";
-import AuthContext from "../../context/auth-context";
+import { NavLink, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+
 
 /**
  * Component
@@ -11,20 +12,20 @@ import AuthContext from "../../context/auth-context";
  * @return {*}
  */
 const Sidebar = (props) => {
+  const navigate = useNavigate();
+    const navigateTo = (location) => {
+      navigate(location)
+      console.log(location)
+    }
+
   return (
     <div className="sideBarContainer">
-      <NavLink to="/login">
-        <div className="sideBarButton">Registrera transaktion</div>
-      </NavLink>
-      <NavLink to="/login">
-        <div className="sideBarButton">Mina transaktioner</div>
-      </NavLink>
-      <NavLink to="/login">
-        <div className="sideBarButton">Historik</div>
-      </NavLink>
-      <NavLink to="/login">
-        <div className="sideBarButton">Min sida</div>
-      </NavLink>
+
+        <Link to="/transactions/register" className="sideBarButton">Registrera transaktion</Link>
+        <Link to="/transactions/" className="sideBarButton">Registrera transaktion</Link>
+        <Link to="/login" className="sideBarButton">Registrera transaktion</Link>
+        <Link to="/login" className="sideBarButton">Registrera transaktion</Link>
+
     </div>
   );
 };

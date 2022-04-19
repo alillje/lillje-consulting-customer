@@ -2,13 +2,12 @@ import "./login.css";
 import { useState, useContext } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import AuthContext from "../../context/auth-context";
-
+import axios from "axios";
 
 // Import redux config
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { login } from "../../reducers/user";
+import { login } from "../../redux/reducers/user";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -29,40 +28,69 @@ const Login = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    const userData = {
-      username: event.target.username.value,
-      password: event.target.password.value,
-    };
-    // Request auth
     try {
-      const response = await fetch("/api/v1/login", {
-        method: "POST",
+      const userData = {
+        username: event.target.username.value,
+        password: event.target.password.value,
+      };
+
+      const configBody = JSON.stringify(userData);
+
+      const res = await axios.post("/api/v1/login", configBody, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(userData)
       });
+      if (res.status === 200) {
+        localStorage.setItem("lc_ab_mb_token", res.data.access_token);
+        localStorage.setItem("lc_ab_mb_refresh_token", res.data.refresh_token);
 
-      const data = await response.json();
-
-      if (response.status === 200) {
-        localStorage.setItem("lc_ab_mb_token", data.access_token);
-        dispatch(login({ user: jwt_decode(data.access_token), refresh_token: data.refresh_token}));
-
+        dispatch(
+          login({
+            user: jwt_decode(res.data.access_token),
+            refresh_token: res.data.refresh_token,
+          })
+        );
       }
 
       navigate("/dashboard");
-      console.log(data);
     } catch (error) {
+      setUsername("")
+      setPassword("")
       console.log(error);
-      setUsername("");
-      setPassword("");
-      if (error.status === 401) {
-        return (
-          <div>Felaktigt användarnamn eller lösenord</div>
-        )
-      }
     }
+
+    // Request auth
+    // try {
+
+    //   const response = await fetch("/api/v1/login", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(userData)
+    //   });
+
+    //   const data = await response.json();
+
+    //   if (response.status === 200) {
+    //     localStorage.setItem("lc_ab_mb_token", data.access_token);
+    //     dispatch(login({ user: jwt_decode(data.access_token), refresh_token: data.refresh_token}));
+
+    //   }
+
+    //   navigate("/dashboard");
+    //   console.log(data);
+    // } catch (error) {
+    //   console.log(error);
+    //   setUsername("");
+    //   setPassword("");
+    //   if (error.status === 401) {
+    //     return (
+    //       <div>Felaktigt användarnamn eller lösenord</div>
+    //     )
+    //   }
+    // }
   };
   const userLoggedIn = useSelector((state) => state.user.auth);
 
