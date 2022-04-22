@@ -5,6 +5,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+}
+
+.wrapper {
+  height: calc(100vh);
+  background-color: #fefefe;
 }
 
 code {

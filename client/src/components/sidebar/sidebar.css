@@ -1,30 +1,4 @@
-.sideBarContainer {
-    width:25%;
-    height: 200px;
-    border: 1px solid #5b5b5b;
-}
+.sidebarDrawer {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
-.sideBarButton {
-    background-color: #4f2929;
-    width: 100%;
-    height: 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: #FFFFFF;
-    cursor: pointer;
-    transition: 0.2s;
-    border: 1px solid #a2a2a2;
-}
-
-.sideBarButton:hover {
-    background-color: #330f0f;
-
-
-}
-
-.sideBarContainer a {
-    text-decoration: none;
-    color: #000000;
 }

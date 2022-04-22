@@ -29,14 +29,16 @@ const ProtectedRoute = () => {
               "Content-Type": "application/json",
             },
           });
-          console.log(res);
 
           if (res.status === 200) {
             localStorage.setItem("lc_ab_mb_token", res.data.access_token);
+            localStorage.setItem("lc_ab_mb_refresh_token", res.data.access_token);
+
             dispatch(
               refresh({
                 user: jwt_decode(res.data.access_token),
-                refresh_token: res.data.refresh_token,
+                access_token: res.data.access_token,
+                refresh_token: res.data.refresh_token
               })
             );
             setAuth(true);

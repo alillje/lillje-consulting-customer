@@ -1,3 +1,8 @@
+import store from "../redux/store";
+import { logout } from "../redux/reducers/user";
+
+
+
 /**
  * Makes a DELETE http request to auth-service and logs out user
  *
@@ -17,6 +22,9 @@ export const logoutHandler = async (user) => {
     });
     localStorage.removeItem("lc_ab_mb_token");
     localStorage.removeItem("lc_ab_mb_refresh_token");
+    store.dispatch(
+      logout()
+    );
   } catch (error) {
     console.log(error);
   }
