@@ -1,23 +1,73 @@
 import * as React from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
-import "./transaction-form.css"
+import "./transaction-form.css";
+import axiosApiInstance from "../../services/axios-interceptor";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useNavigate } from "react-router-dom";
+import { setTransaction } from "../../redux/reducers/transaction";
 
+
+import { useSelector, useDispatch } from "react-redux";
+
+// TODO: Valitation of input
 const TransactionForm = () => {
-  const [value, setValue] = React.useState("");
+  const user = useSelector((state) => state.user);
 
-  const handleSubmit = (event) => {
+  const [description, setDescription] = useState("");
+  const [company, setCompany] = useState("");
+  const [type, setType] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    const reqBody = {
+      description: description,
+      company: company,
+      type: type,
+      author: user.user.sub,
+      date: new Date(event.target.date.value),
+    };
+
+    let reqHeaders = {
+      headers: {
+        Authorization: "Bearer " + user.accessToken,
+      },
+    };
+    try {
+      setLoading(true);
+      const { data } = await axiosApiInstance.post(
+        "http://localhost:9000/api/v1/resources",
+        reqBody,
+        reqHeaders
+      );
+      setLoading(false);
+      dispatch(
+        setTransaction({
+          id: data.id,
+          sub: user.user.sub,
+        })
+      );
+      navigate(`/transactions/${data.id}`)
+    } catch (error) {
+      console.log(error);
+      console.log("Error in transaction/register");
+    }
   };
-  return (
-    <>
+  return loading ? (<CircularProgress />) : (
+    <div>
       <div className="trasactionFormHeader">
-          <h5>        Registrera ny transaktion
-</h5>
-        </div>
+        <h5> Registrera ny transaktion</h5>
+      </div>
       <Box
         component="form"
         sx={{
@@ -31,12 +81,16 @@ const TransactionForm = () => {
           id="outlined-basic"
           label="Företag"
           variant="outlined"
+          value={company}
+          onChange={(event) => setCompany(event.target.value)}
           required
         />
         <TextField
           id="outlined-basic"
           label="Beskrivning"
           variant="outlined"
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
           required
         />
         <TextField
@@ -46,8 +100,8 @@ const TransactionForm = () => {
           required
         />
         <TextField
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={type}
+          onChange={(e) => setType(e.target.value)}
           select // tell TextField to render select
           label="Typ av transaktion"
         >
@@ -62,6 +116,7 @@ const TransactionForm = () => {
           id="date"
           label="Fakturadatum"
           type="date"
+          name="date"
           required
           sx={{ width: 220 }}
           InputLabelProps={{
@@ -70,7 +125,8 @@ const TransactionForm = () => {
         />
         <Button type="submit">Registrera</Button>
       </Box>
-    </>
+    )
+    </div>
   );
 };
 
