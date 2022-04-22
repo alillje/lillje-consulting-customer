@@ -48,6 +48,7 @@ const Login = () => {
         dispatch(
           login({
             user: jwt_decode(res.data.access_token),
+            access_token: res.data.access_token,
             refresh_token: res.data.refresh_token,
           })
         );
@@ -60,37 +61,6 @@ const Login = () => {
       console.log(error);
     }
 
-    // Request auth
-    // try {
-
-    //   const response = await fetch("/api/v1/login", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(userData)
-    //   });
-
-    //   const data = await response.json();
-
-    //   if (response.status === 200) {
-    //     localStorage.setItem("lc_ab_mb_token", data.access_token);
-    //     dispatch(login({ user: jwt_decode(data.access_token), refresh_token: data.refresh_token}));
-
-    //   }
-
-    //   navigate("/dashboard");
-    //   console.log(data);
-    // } catch (error) {
-    //   console.log(error);
-    //   setUsername("");
-    //   setPassword("");
-    //   if (error.status === 401) {
-    //     return (
-    //       <div>Felaktigt användarnamn eller lösenord</div>
-    //     )
-    //   }
-    // }
   };
   const userLoggedIn = useSelector((state) => state.user.auth);
 

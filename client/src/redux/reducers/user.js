@@ -8,6 +8,9 @@ export const userSlice = createSlice({
     user: localStorage.getItem("lc_ab_mb_token")
       ? jwt_decode(localStorage.getItem("lc_ab_mb_token"))
       : null,
+    accessToken: localStorage.getItem("lc_ab_mb_token")
+      ? localStorage.getItem("lc_ab_mb_token")
+      : null,
     refreshToken: localStorage.getItem("lc_ab_mb_refresh_token")
       ? localStorage.getItem("lc_ab_mb_refresh_token")
       : null,
@@ -17,16 +20,19 @@ export const userSlice = createSlice({
     login: (state, action) => {
       state.user = action.payload.user;
       state.refreshToken = action.payload.refresh_token;
+      state.accessToken = action.payload.access_token
       state.auth = true;
     },
     logout: (state) => {
       state.user = null;
       state.refreshToken = null;
+      state.accessToken = null
       state.auth = false;
     },
     refresh: (state, action) => {
       state.user = action.payload.user;
       state.refreshToken = action.payload.refresh_token;
+      state.accessToken = action.payload.access_token;
       state.auth = true;
     },
   },

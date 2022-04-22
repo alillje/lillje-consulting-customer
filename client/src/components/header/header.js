@@ -1,7 +1,5 @@
-import React, { useContext } from "react";
 import "./header.css";
 import { NavLink } from 'react-router-dom';
-import AuthContext from '../../context/auth-context'
 
 
 import Logo from './img/lillje-consulting-logo-1.svg';
@@ -25,6 +23,9 @@ const Header = (props) => {
             <div className="headerTitle">
                 <h1>myBusiness</h1>
                 </div>
+
+            
+
     </div>
   );
 };

@@ -1,15 +1,21 @@
 import "./layout.css";
-import Sidebar from "../../components/sidebar/sidebar";
-import { useSelector, useDispatch } from "react-redux";
-import { logoutHandler } from "../../services/logout-service";
-import { logout } from "../../redux/reducers/user";
+import Sidebar from "../sidebar/sidebar";
+import Topbar from "../topbar/topbar";
 
-const Layout = ({children}) => {
+const Layout = (props) => {
+  const { children } = props;
 
   return (
-    <div>
-      <Sidebar></Sidebar>
-        <main>{children}</main>
+    <div className="layoutContainer">
+      <div className="layoutHeader">
+        <Topbar />
+      </div>
+      <div className="layoutSidebar">
+        <Sidebar />
+      </div>
+
+      <main>{children}</main>
+      <div className="layoutRight"></div>
     </div>
   );
 };
