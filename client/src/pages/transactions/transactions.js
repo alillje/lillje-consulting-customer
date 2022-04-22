@@ -71,7 +71,12 @@ const Transactions = () => {
         });
         break;
       case "all":
-        setResources(allResources.reverse());
+        let all = []
+        allResources.map((resource) => {
+            all.push(resource);
+            return undefined;
+        })
+        setResources(all);
         break;
       default:
         const unhandled = [];

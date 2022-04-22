@@ -10,7 +10,7 @@ const axiosApiInstance = axios.create();
 
 axiosApiInstance.interceptors.request.use((config) => {
   console.log('Request OK')
-
+  console.log(config)
     return config;
 }, function (error) {
   console.log('Request error!')
@@ -26,7 +26,6 @@ console.log('Response is OK!')
   return response;
 }, async function (error) {
   console.log('Response Error!')
-  console.log(error.config.headers['Authorization'])
   const originalConfig = error.config;
 
   if (error.request.status === 401 && error.config && !originalConfig._retry) {
