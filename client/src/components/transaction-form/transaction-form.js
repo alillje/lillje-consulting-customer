@@ -125,7 +125,7 @@ const TransactionForm = () => {
         />
         <Button type="submit">Registrera</Button>
       </Box>
-    )
+    
     </div>
   );
 };

@@ -49,7 +49,7 @@ const Transactions = () => {
       );
       setLoading(false);
     } catch (error) {
-      console.log("Error in transaction.js");
+      console.log("Error in transactions.js");
     }
   };
 
@@ -151,10 +151,6 @@ const Transactions = () => {
                     <Button data={resource.id} onClick={goToTransaction}>
                       Visa detaljer
                     </Button>
-
-                    <Link to={`/transactions/${resource.id}`}>
-                      Visa detaljer
-                    </Link>
                   </Accordion.Body>
                 </Accordion.Item>
               </Accordion>

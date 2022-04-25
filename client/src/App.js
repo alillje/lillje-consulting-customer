@@ -13,6 +13,7 @@ import Dashboard from "./pages/dashboard/dashboard";
 import Transaction from "./pages/transaction/transaction";
 import Transactions from "./pages/transactions/transactions";
 import RegisterTransaction from "./pages/register-transactions/register-transaction";
+import Error from "./pages/error/error";
 
 
 function App() {
@@ -51,6 +52,13 @@ function App() {
                 exact
                 path="/transactions/register"
                 element={<Layout children={<RegisterTransaction />} />}
+              />
+            </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route
+                exact
+                path="*"
+                element={<Layout children={<Error />} />}
               />
             </Route>
           </Routes>
