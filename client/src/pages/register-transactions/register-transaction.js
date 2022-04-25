@@ -7,41 +7,7 @@ import TransactionForm from "../../components/transaction-form/transaction-form"
 
 
 const RegisterTransaction = () => {
-  const [date, setDate] = useState(null);
-  const [description, setDescription] = useState("");
-  const [company, setCompany] = useState("");
 
-
-  // let { contextData } = useContext(AuthContext)
-  const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-
-  const registerTransaction = async (event) => {
-    event.preventDefault();
-    const reqBody = {
-      description: description,
-      company: company,
-      author: user.user.sub,
-      date: new Date(event.target.date.value),
-    };
-
-    let reqHeaders = {
-      headers: {
-        Authorization: "Bearer " + user.accessToken,
-      },
-    };
-    try {
-      const { data } = await axiosApiInstance.post(
-        "http://localhost:9000/api/v1/resources",
-        reqBody,
-        reqHeaders
-      );
-      setDescription("")
-    } catch (error) {
-      console.log(error);
-      console.log("Error in transaction/register");
-    }
-  };
 
   return (
 

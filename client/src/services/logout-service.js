@@ -1,5 +1,6 @@
 import store from "../redux/store";
 import { logout } from "../redux/reducers/user";
+import axios from "axios";
 
 
 
@@ -9,23 +10,28 @@ import { logout } from "../redux/reducers/user";
  * @param {*} user
  */
 export const logoutHandler = async (user) => {
+  
   const refreshTokenToDelete = {
-    refreshToken: user?.refreshToken,
+    refreshToken: store.getState().user.refreshToken,
   };
   try {
-    await fetch("/api/v1/logout", {
-      method: "DELETE",
+await axios.post("/api/v1/logout", refreshTokenToDelete, {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(refreshTokenToDelete),
     });
+
     localStorage.removeItem("lc_ab_mb_token");
     localStorage.removeItem("lc_ab_mb_refresh_token");
     store.dispatch(
       logout()
     );
   } catch (error) {
+    localStorage.removeItem("lc_ab_mb_token");
+    localStorage.removeItem("lc_ab_mb_refresh_token");
+    store.dispatch(
+      logout()
+    );
     console.log(error);
   }
 };

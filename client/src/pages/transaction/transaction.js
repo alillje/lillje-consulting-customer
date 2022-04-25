@@ -3,6 +3,8 @@ import { useState, useEffect } from "react"
 import TransactionCard from "../../components/transaction-card/transaction-card"
 import { useSelector, useDispatch } from "react-redux";
 import axiosApiInstance from "../../services/axios-interceptor";
+import { useNavigate } from "react-router-dom";
+
 import CircularProgress from "@mui/material/CircularProgress";
 
 
@@ -11,6 +13,7 @@ const Transaction = () => {
     const transaction = useSelector((state) => state.transaction);
     const user = useSelector((state) => state.user);
     const [data, setData] = useState(null)
+    const navigate = useNavigate()
 
     const [loading, setLoading] = useState(false);
 
@@ -31,6 +34,8 @@ const Transaction = () => {
             setData(data)
           setLoading(false);
         } catch (error) {
+
+        user.auth ? navigate('/error') : navigate('/login')
           console.log("Error in transaction.js");
         }
       };

@@ -1,13 +1,26 @@
 import "./login.css";
+
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
+
 import { useState, useContext } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
+import Topbar from "../../components/topbar/topbar";
 
 // Import redux config
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/reducers/user";
+import { loginHandler } from "../../services/login-service";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -28,73 +41,129 @@ const Login = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
 
+    const userData = {
+      username: event.target.username.value,
+      password: event.target.password.value,
+    };
+
     try {
-      const userData = {
-        username: event.target.username.value,
-        password: event.target.password.value,
-      };
+      if (await loginHandler(userData)) {
+        navigate("/dashboard");
 
-      const configBody = JSON.stringify(userData);
-
-      const res = await axios.post("/api/v1/login", configBody, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.status === 200) {
-        localStorage.setItem("lc_ab_mb_token", res.data.access_token);
-        localStorage.setItem("lc_ab_mb_refresh_token", res.data.refresh_token);
-
-        dispatch(
-          login({
-            user: jwt_decode(res.data.access_token),
-            access_token: res.data.access_token,
-            refresh_token: res.data.refresh_token,
-          })
-        );
       }
-
-      navigate("/dashboard");
+      
+      setUsername("");
+      setPassword("");
     } catch (error) {
-      setUsername("")
-      setPassword("")
+
       console.log(error);
     }
-
   };
   const userLoggedIn = useSelector((state) => state.user.auth);
 
   return userLoggedIn ? (
     <Navigate to="/dashboard" />
   ) : (
-    <div className="loginContainer">
-      <form onSubmit={handleLogin}>
-        <label htmlFor="username">Username{user}</label>
-        <input
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          type="text"
-          name="username"
-          className=""
-        ></input>
-        <label htmlFor="password">Password</label>
+    <div className="loginLayoutContainer">
+      <div className="loginLayoutHeader">
+        <Topbar />
+      </div>
+      <div className="loginLayoutLeft"></div>
 
-        <input
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          type="password"
-          name="password"
-          className=""
-        ></input>
-        <button type="submit" name="submit" className="">
-          Logga in
-        </button>
-      </form>
+      <div className="mainLogin">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 6,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary" }}>
+            <LockTwoToneIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Logga in
+          </Typography>
+          <Box
+            component="form"
+            noValidate
+            sx={{ mt: 1 }}
+            onSubmit={handleLogin}
+          >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              type="text"
+              name="username"
+              label="Username"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              type="password"
+              name="password"
+              label="Lösenord"
+              id="password"
+              autoComplete="current-password"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2, bgcolor: "#000428" }}
+            >
+              Logga in
+            </Button>
+            <Grid container>
+              <Grid item xs></Grid>
+              <Grid item></Grid>
+            </Grid>
+          </Box>
+        </Box>
+      </div>
+      <div className="loginLayoutRight"></div>
     </div>
   );
 };
 
 export default Login;
+
+// (
+//   <div className="loginContainer">
+//     <form onSubmit={handleLogin}>
+//       <label htmlFor="username">Username{user}</label>
+//       <input
+//         value={username}
+//         onChange={(event) => setUsername(event.target.value)}
+//         type="text"
+//         name="username"
+//         className=""
+//       ></input>
+//       <label htmlFor="password">Password</label>
+
+//       <input
+//         value={password}
+//         onChange={(event) => setPassword(event.target.value)}
+//         type="password"
+//         name="password"
+//         className=""
+//       ></input>
+//       <button type="submit" name="submit" className="">
+//         Logga in
+//       </button>
+//     </form>
+//   </div>
+// );
 
 // let {loginUser} = useContext(AuthContext)}
 // const [username, setUsername] = useState("");

@@ -1,0 +1,10 @@
+.errorContainer {
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+
+.errorText {
+margin-top: 15%;;
+}
