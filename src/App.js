@@ -12,6 +12,9 @@ import Register from "./pages/register/register";
 import Dashboard from "./pages/dashboard/dashboard";
 import Transaction from "./pages/transaction/transaction";
 import Transactions from "./pages/transactions/transactions";
+import TransactionsDone from "./pages/transactions-done/transactions-done";
+import TransactionsOpen from "./pages/transactions-open/transactions-open";
+
 import RegisterTransaction from "./pages/register-transactions/register-transaction";
 import Error from "./pages/error/error";
 
@@ -44,7 +47,7 @@ function App() {
               <Route
                 exact
                 path="/transactions"
-                element={<Layout children={<Transactions />} />}
+                element={<Layout children={<Transactions value="all" />} />}
               />
             </Route>
             <Route element={<ProtectedRoute />}>
@@ -54,6 +57,23 @@ function App() {
                 element={<Layout children={<RegisterTransaction />} />}
               />
             </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route
+                exact
+                path="/transactions/done"
+                element={<Layout children={<TransactionsDone />} />}
+              />
+            </Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route
+                exact
+                path="/transactions/open"
+                element={<Layout children={<TransactionsOpen />} />}
+              />
+            </Route>
+
+
             <Route element={<ProtectedRoute />}>
               <Route
                 exact

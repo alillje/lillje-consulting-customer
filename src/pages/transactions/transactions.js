@@ -14,7 +14,8 @@ import Button from "@mui/material/Button";
 import Accordion from "react-bootstrap/Accordion";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const Transactions = () => {
+const Transactions = ({value}) => {
+  console.log(value)
   const user = useSelector((state) => state.user);
   const transaction = useSelector((state) => state.transaction);
   const dispatch = useDispatch();
@@ -24,6 +25,20 @@ const Transactions = () => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(false);
   let i = 0;
+  let apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`
+
+
+  switch (value) {
+    case "done": 
+    apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?done=true`
+    break
+    case "open": 
+    apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?done=false`
+    break
+    default: 
+    apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`
+  }
+
 
   // let { contextData } = useContext(AuthContext)
   let config = {
@@ -32,13 +47,15 @@ const Transactions = () => {
     },
   };
 
+  console.log(apiUrl)
   const getResources = async () => {
     try {
       setLoading(true);
       const { data } = await axiosApiInstance.get(
-        "http://localhost:9000/api/v1/resources",
+        apiUrl,
         config
       );
+      console.log(data)
       setAllResources(data.reverse());
       setResources(data.reverse());
       dispatch(
@@ -90,6 +107,7 @@ const Transactions = () => {
     }
   };
   useEffect(() => {
+
     getResources();
   }, []);
 

@@ -17,7 +17,7 @@ export const loginHandler = async (userData) => {
   try {
 
     const configBody = JSON.stringify(userData)
-    const res = await axios.post("/api/v1/login", configBody, {
+    const res = await axios.post(`${process.env.REACT_APP_AUTH_API}/login`, configBody, {
         headers: {
           "Content-Type": "application/json",
         },

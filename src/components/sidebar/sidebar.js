@@ -88,7 +88,7 @@ const Sidebar = () => {
               <ListItem
                 button
                 component={Link}
-                to="/transactions"
+                to="/transactions/done"
                 sx={{ pl: 4 }}
               >
                 <ListItemIcon>
@@ -100,7 +100,7 @@ const Sidebar = () => {
               <ListItem
                 button
                 component={Link}
-                to="/transactions"
+                to="/transactions/open"
                 sx={{ pl: 4 }}
               >
                 <ListItemIcon>
