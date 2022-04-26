@@ -15,6 +15,7 @@ export const userSlice = createSlice({
       ? localStorage.getItem("lc_ab_mb_refresh_token")
       : null,
     auth: localStorage.getItem("lc_ab_mb_token") ? true : false,
+    admin: jwt_decode(localStorage.getItem("lc_ab_mb_token")).admin
   },
   reducers: {
     login: (state, action) => {
@@ -22,18 +23,23 @@ export const userSlice = createSlice({
       state.refreshToken = action.payload.refresh_token;
       state.accessToken = action.payload.access_token
       state.auth = true;
+      state.admin = jwt_decode(action.payload.access_token).admin
     },
     logout: (state) => {
       state.user = null;
       state.refreshToken = null;
       state.accessToken = null
       state.auth = false;
+      state.admin = false
+
     },
     refresh: (state, action) => {
       state.user = action.payload.user;
       state.refreshToken = action.payload.refresh_token;
       state.accessToken = action.payload.access_token;
       state.auth = true;
+      state.admin = jwt_decode(action.payload.access_token).admin
+
     },
   },
 });

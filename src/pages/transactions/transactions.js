@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import axiosApiInstance from "../../services/axios-interceptor";
 import dayjs from "dayjs";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setTransaction } from "../../redux/reducers/transaction";
 import { setTransactions } from "../../redux/reducers/transactions";
 
@@ -15,7 +15,6 @@ import Accordion from "react-bootstrap/Accordion";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const Transactions = ({value}) => {
-  console.log(value)
   const user = useSelector((state) => state.user);
   const transaction = useSelector((state) => state.transaction);
   const dispatch = useDispatch();
@@ -47,7 +46,6 @@ const Transactions = ({value}) => {
     },
   };
 
-  console.log(apiUrl)
   const getResources = async () => {
     try {
       setLoading(true);
@@ -151,20 +149,22 @@ const Transactions = ({value}) => {
         <div className="resourceList">
           {resources.map((resource) => {
             let id = getId();
-            let resourceDate = dayjs(resource?.invoiceDate).format(
-              "YYYY/MM/DD"
-            );
+
             return (
               <Accordion key={resource.id}>
                 <Accordion.Item eventKey={id} data={resource.author}>
                   <Accordion.Header>
-                    {resource?.company} - {resourceDate}
+                    {resource?.company} - {dayjs.unix(resource?.invoiceDate).format(
+              "YYYY/MM/DD"
+            )}
                   </Accordion.Header>
                   <Accordion.Body>Företag: {resource?.company}</Accordion.Body>
                   <Accordion.Body>
                     Beskrivning: {resource.description}
                   </Accordion.Body>
-                  <Accordion.Body>Fakturadatum: {resourceDate}</Accordion.Body>
+                  <Accordion.Body>Fakturadatum: {dayjs.unix(resource?.invoiceDate).format(
+              "YYYY/MM/DD"
+            )}</Accordion.Body>
                   <Accordion.Body>
                     <Button data={resource.id} onClick={goToTransaction}>
                       Visa detaljer

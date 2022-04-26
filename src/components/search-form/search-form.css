@@ -1,0 +1,61 @@
+.searchFormHeader {
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+}
+
+.accordion-button[aria-expanded="true"] {
+    background-color:#bccee8;
+    color: #000000;
+    border: none;
+}
+
+.searchTransactionListContainer {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 0.3fr repeat(20px, 1fr);
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    margin: 0px 0px 20px 0px;
+    box-sizing: border-box;
+}
+
+.accordion-button::after {
+    color: #050412;
+}
+
+.accordion-button:hover {
+    background-color: #bccee8;
+}
+
+.searchFormHeaderGrid {
+    grid-area: 2 / 2 / 6 / 3;
+    display: flex;
+    justify-content: center;
+}
+
+.searchTransactionList {
+    grid-area: 4 / 1 / 6 / 4;
+    margin: 0px 0px 20px 0px;
+}
+
+.searchLoadingSpinner {
+    display: flex;
+    justify-content: center;
+    margin-top: 8%;
+}
+
+.searchNoResults {
+    grid-area: 4 / 1 / 6 / 4;
+    text-align: center;
+    font-size: 2rem;
+    color: #9a5e5e;
+    letter-spacing: 3px;
+}
+
+.searchErrorMessage {
+    grid-area: 4 / 1 / 6 / 4;
+
+}

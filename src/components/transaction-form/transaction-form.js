@@ -45,7 +45,7 @@ const TransactionForm = () => {
     try {
       setLoading(true);
       const { data } = await axiosApiInstance.post(
-        "http://localhost:9000/api/v1/resources",
+        `${process.env.REACT_APP_RESOURCE_API}/resources`,
         reqBody,
         reqHeaders
       );
