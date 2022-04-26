@@ -58,7 +58,10 @@ const TransactionCard = ({transaction}) => {
               <TableCell component="th" scope="row">
                 Fakturadatum
               </TableCell>
-              <TableCell align="right">{dayjs(transaction?.invoiceDate).format(
+              {/* <TableCell align="right">{dayjs(transaction?.invoiceDate).format(
+              "YYYY/MM/DD"
+            )}</TableCell> */}
+                          <TableCell align="right">{dayjs.unix(transaction?.invoiceDate).format(
               "YYYY/MM/DD"
             )}</TableCell>
             </TableRow>
@@ -82,7 +85,7 @@ const TransactionCard = ({transaction}) => {
               <TableCell component="th" scope="row">
                 Belopp
               </TableCell>
-              <TableCell align="right">{transaction?.amout ? transaction.amout : 0} SEK</TableCell>
+              <TableCell align="right">{transaction?.ammout ? transaction.ammout : 0} SEK</TableCell>
             </TableRow>
 
             <TableRow

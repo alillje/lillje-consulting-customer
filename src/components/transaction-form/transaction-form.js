@@ -11,7 +11,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import { setTransaction } from "../../redux/reducers/transaction";
 
-
 import { useSelector, useDispatch } from "react-redux";
 
 // TODO: Valitation of input
@@ -20,6 +19,7 @@ const TransactionForm = () => {
 
   const [description, setDescription] = useState("");
   const [company, setCompany] = useState("");
+  const [ammount, setAmmount] = useState("");
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -27,17 +27,16 @@ const TransactionForm = () => {
 
   const navigate = useNavigate();
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const reqBody = {
       description: description,
       company: company,
       type: type,
+      ammount: ammount,
       author: user.user.sub,
-      date: new Date(event.target.date.value),
+      date: new Date(event.target.date.value).getTime() / 1000,
     };
-
     let reqHeaders = {
       headers: {
         Authorization: "Bearer " + user.accessToken,
@@ -57,13 +56,15 @@ const TransactionForm = () => {
           sub: user.user.sub,
         })
       );
-      navigate(`/transactions/${data.id}`)
+      navigate(`/transactions/${data.id}`);
     } catch (error) {
       console.log(error);
       console.log("Error in transaction/register");
     }
   };
-  return loading ? (<CircularProgress />) : (
+  return loading ? (
+    <CircularProgress />
+  ) : (
     <div>
       <div className="trasactionFormHeader">
         <h5> Registrera ny transaktion</h5>
@@ -94,6 +95,8 @@ const TransactionForm = () => {
           required
         />
         <TextField
+          value={ammount}
+          onChange={(e) => setAmmount(e.target.value)}
           id="outlined-basic"
           label="Belopp"
           variant="outlined"
@@ -125,7 +128,6 @@ const TransactionForm = () => {
         />
         <Button type="submit">Registrera</Button>
       </Box>
-    
     </div>
   );
 };

@@ -25,7 +25,6 @@ console.log('Response is OK!')
 
   return response;
 }, async function (error) {
-  let timeNow = Math.floor(Date.now().valueOf() / 1000);
 
   console.log('Response Error!')
   const originalConfig = error.config;
