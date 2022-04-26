@@ -148,7 +148,7 @@ const Sidebar = () => {
             </List>
           </Collapse>
 
-          <ListItem button component={Link} to="/transactions">
+          <ListItem button component={Link} to="/transactions/search">
             <ListItemIcon>
               <ManageSearchSharpIcon />
             </ListItemIcon>

@@ -14,6 +14,7 @@ import Transaction from "./pages/transaction/transaction";
 import Transactions from "./pages/transactions/transactions";
 import TransactionsDone from "./pages/transactions-done/transactions-done";
 import TransactionsOpen from "./pages/transactions-open/transactions-open";
+import TransactionsSearch from "./pages/transactions-search/transactions-search";
 
 import RegisterTransaction from "./pages/register-transactions/register-transaction";
 import Error from "./pages/error/error";
@@ -72,6 +73,16 @@ function App() {
                 element={<Layout children={<TransactionsOpen />} />}
               />
             </Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route
+                exact
+                path="/transactions/search"
+                element={<Layout children={<TransactionsSearch />} />}
+              />
+            </Route>
+
+
 
 
             <Route element={<ProtectedRoute />}>
