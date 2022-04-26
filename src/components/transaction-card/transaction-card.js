@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 
 
 const TransactionCard = ({transaction}) => {
-
+console.log(transaction)
 
     return (
   <React.Fragment>
@@ -76,8 +76,6 @@ const TransactionCard = ({transaction}) => {
               <TableCell align="right">{transaction?.description}</TableCell>
             </TableRow>
 
-
-
             <TableRow
               key="amount"
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -85,7 +83,7 @@ const TransactionCard = ({transaction}) => {
               <TableCell component="th" scope="row">
                 Belopp
               </TableCell>
-              <TableCell align="right">{transaction?.ammout ? transaction.ammout : 0} SEK</TableCell>
+              <TableCell align="right">{transaction?.amount} SEK</TableCell>
             </TableRow>
 
             <TableRow
@@ -95,7 +93,7 @@ const TransactionCard = ({transaction}) => {
               <TableCell component="th" scope="row">
                 Status
               </TableCell>
-              <TableCell align="right">{transaction?.done ? "Ja" : "Nej"}</TableCell>
+              <TableCell align="right">{transaction?.done ? "Hanterad" : "Ohanterad"}</TableCell>
             </TableRow>
 
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -14,6 +14,7 @@ import { setTransaction } from "../../redux/reducers/transaction";
 import { useSelector, useDispatch } from "react-redux";
 import Accordion from "react-bootstrap/Accordion";
 import dayjs from "dayjs";
+import validator from "validator";
 
 // Alert
 import Alert from "@mui/material/Alert";
@@ -25,60 +26,65 @@ const SearchForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [transactions, setTransactions] = useState([]);
   const [company, setCompany] = useState("");
+  const [date, setDate] = useState("");
   const [minParams, setMinParams] = useState(false);
-  const [ammount, setAmmount] = useState("");
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
   const [completeSearch, setCompleteSearch] = useState(false);
+  let apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   let i = 0;
 
+  const setUrl = (companySanitized, dateSanitized) => {
+    let url;
+    if (companySanitized.length > 0 && dateSanitized.length > 0) {
+      url = `${apiUrl}?company=${companySanitized.replace(
+        " ",
+        "+"
+      )}&invoiceDate=${new Date(dateSanitized).getTime() / 1000}`;
+      setMinParams(true);
+    } else if (companySanitized.length > 0) {
+      url = `${apiUrl}?company=${companySanitized.replace(" ", "+")}`;
+    } else if (dateSanitized.length > 0) {
+      url = `${apiUrl}?invoiceDate=${new Date(dateSanitized).getTime() / 1000}`;
+    }
+    return url;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Set search params
-    let apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`;
-    if (company.length > 0 && event.target.date.value.length > 0) {
-      apiUrl = `${apiUrl}?company=${company.replace(" ", "+")}&invoiceDate=${
-        new Date(event.target.date.value).getTime() / 1000
-      }`;
-      setMinParams(true);
-    } else if (company.length > 0) {
-      apiUrl = `${apiUrl}?company=${company.replace(" ", "+")}`;
-      setMinParams(true);
-    } else if (event.target.date.value.length > 0) {
-      apiUrl = `${apiUrl}?invoiceDate=${
-        new Date(event.target.date.value).getTime() / 1000
-      }`;
-      setMinParams(true);
+    // Sanitize html and set search params
+    const companySanitized = validator.escape(company);
+    const dateSanitized = validator.escape(date);
+
+    let url = setUrl(companySanitized, dateSanitized);
+
+    console.log(url)
+    if (url) {
+      apiUrl = url;
     }
-    let reqHeaders = {
-      headers: {
-        Authorization: "Bearer " + user.accessToken,
-      },
-    };
+
     if (minParams) {
+      let reqHeaders = {
+        headers: {
+          Authorization: "Bearer " + user.accessToken,
+        },
+      };
       try {
         setLoading(true);
         const { data } = await axiosApiInstance.get(apiUrl, reqHeaders);
         setCompleteSearch(true);
-
         setLoading(false);
-        setTransactions(data.reverse());
+        setTransactions(data);
         setErrorMessage("");
-
-        console.log(data);
+        setDate("")
+        setCompany("")
       } catch (error) {
-        console.log(error);
-        console.log("Error in transaction/search");
-        return (
-          <Alert severity="info">
-            <AlertTitle>Info</AlertTitle>
-            This is an info alert — <strong>check it out!</strong>
-          </Alert>
-        );
+        setLoading(false);
+        setErrorMessage("Ett oväntat fel inträffade");
       }
     } else {
       setErrorMessage("Minst en sökparameter måste anges");
@@ -102,8 +108,19 @@ const SearchForm = () => {
 
   const newSearch = () => {
     setCompleteSearch(false);
+    setMinParams(false);
     setCompany("");
   };
+
+  useEffect(() => {
+    if (company.length > 0) {
+      setMinParams(true);
+    }
+    if (date.length > 0) {
+      setMinParams(true);
+    }
+    console.log(date)
+  }, [minParams, company, date]);
 
   if (loading) {
     return (
@@ -169,11 +186,11 @@ const SearchForm = () => {
           <h5>Sök Transaktion</h5>
         </div>
         {errorMessage && (
-            <Alert severity="info" className="searchErrorMessage">
-              <AlertTitle>Ett fel inträffade</AlertTitle>
-              {errorMessage}
-            </Alert>
-          )}
+          <Alert severity="info" className="searchErrorMessage">
+            <AlertTitle>Ett fel inträffade</AlertTitle>
+            {errorMessage}
+          </Alert>
+        )}
         <Box
           component="form"
           sx={{
@@ -205,6 +222,7 @@ const SearchForm = () => {
             </MenuItem>
           </TextField>
           <TextField
+            onChange={(event) => setDate(event.target.value)}
             id="date"
             label="Fakturadatum"
             type="date"

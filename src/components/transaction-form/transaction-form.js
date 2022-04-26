@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -12,6 +12,13 @@ import { useNavigate } from "react-router-dom";
 import { setTransaction } from "../../redux/reducers/transaction";
 
 import { useSelector, useDispatch } from "react-redux";
+import validator from "validator";
+
+// Alert
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+
+
 
 // TODO: Valitation of input
 const TransactionForm = () => {
@@ -19,29 +26,34 @@ const TransactionForm = () => {
 
   const [description, setDescription] = useState("");
   const [company, setCompany] = useState("");
-  const [ammount, setAmmount] = useState("");
+  const [date, setDate] = useState("");
+  const [amount, setAmount] = useState("");
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
-
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
+  const [minParams, setMinParams] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const reqBody = {
-      description: description,
-      company: company,
-      type: type,
-      ammount: ammount,
-      author: user.user.sub,
-      date: new Date(event.target.date.value).getTime() / 1000,
+      description: validator.escape(description),
+      company: validator.escape(company),
+      type: validator.escape(type),
+      amount: validator.escape(amount),
+      author: validator.escape(user.user.sub),
+      date: new Date(date).getTime() / 1000
     };
     let reqHeaders = {
       headers: {
         Authorization: "Bearer " + user.accessToken,
-      },
+      }
     };
+
+
+    if (minParams) {
     try {
       setLoading(true);
       const { data } = await axiosApiInstance.post(
@@ -60,8 +72,27 @@ const TransactionForm = () => {
     } catch (error) {
       console.log(error);
       console.log("Error in transaction/register");
+      setLoading(false);
+      setErrorMessage("Ett oväntat fel inträffade");
     }
-  };
+  } else {
+    setErrorMessage("Alla fält måste fyllas i för att kunna registrera en ny transaktion");
+
+}
+  }
+
+  useEffect(() => {
+    if (company.length > 0 && date.length > 0 && amount.length > 0 && description.length > 0) {
+      setMinParams(true)
+    } else {
+      setMinParams(false)
+
+    }
+    console.log(minParams)
+  }, [minParams, company, date, amount, description]);
+
+
+
   return loading ? (
     <CircularProgress />
   ) : (
@@ -78,6 +109,12 @@ const TransactionForm = () => {
         autoComplete="off"
         onSubmit={handleSubmit}
       >
+                {errorMessage && (
+          <Alert severity="info" className="searchErrorMessage">
+            <AlertTitle>Ett fel inträffade</AlertTitle>
+            {errorMessage}
+          </Alert>
+        )}
         <TextField
           id="outlined-basic"
           label="Företag"
@@ -95,8 +132,8 @@ const TransactionForm = () => {
           required
         />
         <TextField
-          value={ammount}
-          onChange={(e) => setAmmount(e.target.value)}
+          value={amount}
+          onChange={(event) => setAmount(event.target.value)}
           id="outlined-basic"
           label="Belopp"
           variant="outlined"
@@ -104,7 +141,7 @@ const TransactionForm = () => {
         />
         <TextField
           value={type}
-          onChange={(e) => setType(e.target.value)}
+          onChange={(event) => setType(event.target.value)}
           select // tell TextField to render select
           label="Typ av transaktion"
         >
@@ -116,6 +153,7 @@ const TransactionForm = () => {
           </MenuItem>
         </TextField>
         <TextField
+          onChange={(event) => setDate(event.target.value)}
           id="date"
           label="Fakturadatum"
           type="date"
@@ -131,5 +169,6 @@ const TransactionForm = () => {
     </div>
   );
 };
+
 
 export default TransactionForm;
