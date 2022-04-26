@@ -1,7 +1,7 @@
 import "./transaction.css";
 import { useState, useEffect } from "react"
 import TransactionCard from "../../components/transaction-card/transaction-card"
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import axiosApiInstance from "../../services/axios-interceptor";
 import { useNavigate } from "react-router-dom";
 
@@ -29,7 +29,7 @@ const Transaction = () => {
         try {
           setLoading(true);
           const { data } = await axiosApiInstance.get(
-            `http://localhost:9000/api/v1/resources/${transaction.id}`,
+            `${process.env.REACT_APP_RESOURCE_API}/resources/${transaction.id}`,
             config
           );
             setData(data)
