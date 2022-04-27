@@ -7,14 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { setTransaction } from "../../redux/reducers/transaction";
 import { setTransactions } from "../../redux/reducers/transactions";
 
-
 import * as React from "react";
 import Button from "@mui/material/Button";
 
 import Accordion from "react-bootstrap/Accordion";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const Transactions = ({value}) => {
+const Transactions = ({ value }) => {
   const user = useSelector((state) => state.user);
   const transaction = useSelector((state) => state.transaction);
   const dispatch = useDispatch();
@@ -24,20 +23,18 @@ const Transactions = ({value}) => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(false);
   let i = 0;
-  let apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`
-
+  let apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`;
 
   switch (value) {
-    case "done": 
-    apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?done=true`
-    break
-    case "open": 
-    apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?done=false`
-    break
-    default: 
-    apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`
+    case "done":
+      apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?done=true`;
+      break;
+    case "open":
+      apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?done=false`;
+      break;
+    default:
+      apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`;
   }
-
 
   // let { contextData } = useContext(AuthContext)
   let config = {
@@ -49,11 +46,8 @@ const Transactions = ({value}) => {
   const getResources = async () => {
     try {
       setLoading(true);
-      const { data } = await axiosApiInstance.get(
-        apiUrl,
-        config
-      );
-      console.log(data)
+      const { data } = await axiosApiInstance.get(apiUrl, config);
+      console.log(data);
       setAllResources(data.reverse());
       setResources(data.reverse());
       dispatch(
@@ -86,11 +80,11 @@ const Transactions = ({value}) => {
         });
         break;
       case "all":
-        let all = []
+        let all = [];
         allResources.map((resource) => {
-            all.push(resource);
-            return undefined;
-        })
+          all.push(resource);
+          return undefined;
+        });
         setResources(all);
         break;
       default:
@@ -105,7 +99,6 @@ const Transactions = ({value}) => {
     }
   };
   useEffect(() => {
-
     getResources();
   }, []);
 
@@ -123,7 +116,13 @@ const Transactions = ({value}) => {
   return (
     <div className="resourceListContainer">
       <div className="transactionsTopbar">
-        <Button
+        
+        {value === "all" && <h2>Alla transaktioner</h2>}
+
+        {value === "done" && <h2>Hanterade transaktioner</h2>}
+        {value === "open" && <h2>Ohanterade transaktioner</h2>}
+
+        {/* <Button
           onClick={handleClick}
           eventKey="all"
           id="basic-button"
@@ -141,7 +140,7 @@ const Transactions = ({value}) => {
         </Button>
         <Button onClick={handleClick} id="basic-button" aria-haspopup="true">
           Ohanterade
-        </Button>
+        </Button> */}
       </div>
       {loading ? (
         <CircularProgress className="loadingSpinner" />
@@ -154,17 +153,17 @@ const Transactions = ({value}) => {
               <Accordion key={resource.id}>
                 <Accordion.Item eventKey={id} data={resource.author}>
                   <Accordion.Header>
-                    {resource?.company} - {dayjs.unix(resource?.invoiceDate).format(
-              "YYYY/MM/DD"
-            )}
+                    {resource?.company} -{" "}
+                    {dayjs.unix(resource?.invoiceDate).format("YYYY/MM/DD")}
                   </Accordion.Header>
                   <Accordion.Body>Företag: {resource?.company}</Accordion.Body>
                   <Accordion.Body>
                     Beskrivning: {resource.description}
                   </Accordion.Body>
-                  <Accordion.Body>Fakturadatum: {dayjs.unix(resource?.invoiceDate).format(
-              "YYYY/MM/DD"
-            )}</Accordion.Body>
+                  <Accordion.Body>
+                    Fakturadatum:{" "}
+                    {dayjs.unix(resource?.invoiceDate).format("YYYY/MM/DD")}
+                  </Accordion.Body>
                   <Accordion.Body>
                     <Button data={resource.id} onClick={goToTransaction}>
                       Visa detaljer

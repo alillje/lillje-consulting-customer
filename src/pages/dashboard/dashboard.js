@@ -1,7 +1,12 @@
 import "./dashboard.css";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import axios from "axios";
+
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { Link } from "react-router-dom";
+
 
 
 const Dashboard = () => {
@@ -9,10 +14,70 @@ const Dashboard = () => {
 
   return (
     <div className="dashboardContainer">
-      <div className="div1">fsa</div>
-      <div className="div2">fsa</div>
-      <div className="div3">fsa</div>
-      <div className="div4">fsa</div>
+      <div className="div1">
+      <Link to="/transactions/register">
+
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div" sx={{color: '#ffffff'}}>
+          Registrera transaktion
+        </Typography>
+
+      </CardContent>
+      <CardActions>
+      <Button sx={{color: '#ffffff'}} size="large">Ny transaktion &#187;</Button>
+
+      </CardActions>
+
+      </Link>
+      </div>
+      <div className="div2">
+      <Link to="/transactions/">
+
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div" sx={{color: '#ffffff'}}>
+          Visa alla transaktioner
+        </Typography>
+
+      </CardContent>
+      <CardActions>
+      <Button sx={{color: '#ffffff'}} size="large">Alla transaktioner &#187;</Button>
+
+      </CardActions>
+
+      </Link>
+      </div>
+      <div className="div3">
+      <Link to="/transactions/search">
+
+<CardContent>
+  <Typography gutterBottom variant="h5" component="div" sx={{color: '#ffffff'}}>
+    Sök efter transaktion
+  </Typography>
+
+</CardContent>
+<CardActions>
+<Button sx={{color: '#ffffff'}} size="large">Hitta transaktion &#187;</Button>
+
+</CardActions>
+
+</Link>
+      </div>
+      <div className="div4">
+      <Link to="/transactions/">
+
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div" sx={{color: '#ffffff'}}>
+          Mina uppgifter
+        </Typography>
+
+      </CardContent>
+      <CardActions>
+      <Button sx={{color: '#ffffff'}} size="large">Mina uppgifter &#187;</Button>
+
+      </CardActions>
+
+      </Link>
+      </div>
 
     </div>
   );

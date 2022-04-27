@@ -7,7 +7,6 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircleSharpIcon from "@mui/icons-material/AccountCircleSharp";
 
@@ -106,6 +105,8 @@ const TopBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
  
           </Box>
+          {user.auth &&
+
           <Box sx={{ flexGrow: 0 }}>
             <AccountCircleSharpIcon
               onClick={handleOpenUserMenu}
@@ -130,8 +131,10 @@ const TopBar = () => {
               <MenuItem key="logout" onClick={handleLogout}>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>
+
             </Menu>
           </Box>
+          }
         </Toolbar>
       </Container>
     </AppBar>

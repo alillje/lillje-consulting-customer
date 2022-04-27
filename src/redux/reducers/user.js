@@ -15,7 +15,7 @@ export const userSlice = createSlice({
       ? localStorage.getItem("lc_ab_mb_refresh_token")
       : null,
     auth: localStorage.getItem("lc_ab_mb_token") ? true : false,
-    admin: jwt_decode(localStorage.getItem("lc_ab_mb_token")).admin
+    admin: localStorage.getItem("lc_ab_mb_refresh_token") ? jwt_decode(localStorage.getItem("lc_ab_mb_token")).admin : null
   },
   reducers: {
     login: (state, action) => {

@@ -1,7 +1,7 @@
 import axios from "axios";
 import store from "../redux/store";
 import jwt_decode from "jwt-decode";
-import { refresh } from "../redux/reducers/user";
+import { refresh, logout } from "../redux/reducers/user";
 
 
 const axiosApiInstance = axios.create();
@@ -48,6 +48,8 @@ console.log('Response is OK!')
         user: jwt_decode(res.data.access_token),
         access_token: res.data.access_token,
         refresh_token: res.data.refresh_token,
+        admin: jwt_decode(res.data.access_token).admin,
+
       })
     );
     error.config.headers['Authorization'] = 'Bearer ' + res.data.access_token
@@ -56,6 +58,10 @@ console.log('Response is OK!')
     return await axios.request(error.config)
 
   }
+
+  store.dispatch(
+    logout()
+  );
     return Promise.reject(error);
 
   
