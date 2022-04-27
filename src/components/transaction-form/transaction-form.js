@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
@@ -18,8 +17,6 @@ import validator from "validator";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
-
-
 // TODO: Valitation of input
 const TransactionForm = () => {
   const user = useSelector((state) => state.user);
@@ -28,70 +25,90 @@ const TransactionForm = () => {
   const [company, setCompany] = useState("");
   const [date, setDate] = useState("");
   const [amount, setAmount] = useState("");
-  const [type, setType] = useState("");
+  const [transactionCategory, setTransactionCategory] = useState("");
+  const [transactionType, setTransactionType] = useState("");
+  const [viewCategories, setViewCategories] = useState(true);
+
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [minParams, setMinParams] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const transactionTypes = ["Leverantörsfaktura", "Kundfaktura", "Utlägg"];
+  const transactionCategories = [
+    "Bensin",
+    "Material",
+    "Mobil",
+    "Internet",
+    "Försäkring",
+    "Övrigt"
+    ];
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const reqBody = {
       description: validator.escape(description),
       company: validator.escape(company),
-      type: validator.escape(type),
+      transactionType: validator.escape(transactionType),
+      transactionCategory: transactionType !== "Leverantörsfaktura" ? validator.escape(transactionCategory) : "Försäljning",
       amount: validator.escape(amount),
       author: validator.escape(user.user.sub),
-      date: new Date(date).getTime() / 1000
+      date: new Date(date).getTime() / 1000,
     };
     let reqHeaders = {
       headers: {
         Authorization: "Bearer " + user.accessToken,
-      }
+      },
     };
 
-
     if (minParams) {
-    try {
-      setLoading(true);
-      const { data } = await axiosApiInstance.post(
-        `${process.env.REACT_APP_RESOURCE_API}/resources`,
-        reqBody,
-        reqHeaders
+      try {
+        setLoading(true);
+        const { data } = await axiosApiInstance.post(
+          `${process.env.REACT_APP_RESOURCE_API}/resources`,
+          reqBody,
+          reqHeaders
+        );
+        setLoading(false);
+        dispatch(
+          setTransaction({
+            id: data.id,
+            sub: user.user.sub,
+          })
+        );
+        navigate(`/transactions/${data.id}`);
+      } catch (error) {
+        console.log(error);
+        console.log("Error in transaction/register");
+        setLoading(false);
+        setErrorMessage("Ett oväntat fel inträffade");
+      }
+    } else {
+      setErrorMessage(
+        "Alla fält måste fyllas i för att kunna registrera en ny transaktion"
       );
-      setLoading(false);
-      dispatch(
-        setTransaction({
-          id: data.id,
-          sub: user.user.sub,
-        })
-      );
-      navigate(`/transactions/${data.id}`);
-    } catch (error) {
-      console.log(error);
-      console.log("Error in transaction/register");
-      setLoading(false);
-      setErrorMessage("Ett oväntat fel inträffade");
     }
-  } else {
-    setErrorMessage("Alla fält måste fyllas i för att kunna registrera en ny transaktion");
-
-}
-  }
+  };
 
   useEffect(() => {
-    if (company.length > 0 && date.length > 0 && amount.length > 0 && description.length > 0) {
-      setMinParams(true)
-    } else {
-      setMinParams(false)
-
+    if (transactionType === "Leverantörsfaktura") {
+      setViewCategories(true);
+    } else if (transactionType !== "Leverantörsfaktura") {
+      setViewCategories(false);
     }
-    console.log(minParams)
-  }, [minParams, company, date, amount, description]);
 
-
+    if (
+      company.length > 0 &&
+      date.length > 0 &&
+      amount.length > 0 &&
+      description.length > 0
+    ) {
+      setMinParams(true);
+    } else {
+      setMinParams(false);
+    }
+  }, [minParams, company, date, amount, description, transactionType, viewCategories]);
 
   return loading ? (
     <CircularProgress />
@@ -109,12 +126,45 @@ const TransactionForm = () => {
         autoComplete="off"
         onSubmit={handleSubmit}
       >
-                {errorMessage && (
+        {errorMessage && (
           <Alert severity="info" className="searchErrorMessage">
             <AlertTitle>Ett fel inträffade</AlertTitle>
             {errorMessage}
           </Alert>
         )}
+
+<TextField
+          value={transactionType}
+          onChange={(event) => setTransactionType(event.target.value)}
+          select // tell TextField to render select
+          label="Typ av transaktion"
+        >
+          {transactionTypes.map((type) => {
+            return (
+              <MenuItem key={type} value={type}>
+                {type}
+              </MenuItem>
+            );
+          })}
+        </TextField>
+        {viewCategories === true && (
+          <TextField
+            value={transactionCategory}
+            onChange={(event) => setTransactionCategory(event.target.value)}
+            select // tell TextField to render select
+            label="Kategori"
+          >
+            {transactionCategories.map((category) => {
+              return (
+                <MenuItem key={category} value={category}>
+                  {category}
+                </MenuItem>
+              ) 
+            })}
+          </TextField>
+        )}
+
+
         <TextField
           id="outlined-basic"
           label="Företag"
@@ -139,19 +189,7 @@ const TransactionForm = () => {
           variant="outlined"
           required
         />
-        <TextField
-          value={type}
-          onChange={(event) => setType(event.target.value)}
-          select // tell TextField to render select
-          label="Typ av transaktion"
-        >
-          <MenuItem key={1} value="test">
-            Test 1
-          </MenuItem>
-          <MenuItem key={2} value="test2">
-            Test 2
-          </MenuItem>
-        </TextField>
+
         <TextField
           onChange={(event) => setDate(event.target.value)}
           id="date"
@@ -169,6 +207,5 @@ const TransactionForm = () => {
     </div>
   );
 };
-
 
 export default TransactionForm;
