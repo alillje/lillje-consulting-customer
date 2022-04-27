@@ -59,9 +59,9 @@ console.log('Response is OK!')
 
   }
 
-  store.dispatch(
-    logout()
-  );
+  // store.dispatch(
+  //   logout()
+  // );
     return Promise.reject(error);
 
   

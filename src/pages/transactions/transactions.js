@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import axiosApiInstance from "../../services/axios-interceptor";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../../redux/reducers/user";
+
 import { setTransaction } from "../../redux/reducers/transaction";
 import { setTransactions } from "../../redux/reducers/transactions";
 
@@ -15,7 +17,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 const Transactions = ({ value }) => {
   const user = useSelector((state) => state.user);
-  const transaction = useSelector((state) => state.transaction);
+  // const transaction = useSelector((state) => state.transaction);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -58,6 +60,9 @@ const Transactions = ({ value }) => {
       );
       setLoading(false);
     } catch (error) {
+      dispatch(
+        logout()
+      );
       console.log("Error in transactions.js");
     }
   };
@@ -66,38 +71,38 @@ const Transactions = ({ value }) => {
     return i++;
   };
 
-  const handleClick = (event) => {
-    event.preventDefault();
-    switch (event.target.getAttribute("eventKey")) {
-      case "done":
-        const done = [];
-        allResources.map((resource) => {
-          if (resource.done) {
-            done.push(resource);
-          }
-          setResources(done.reverse());
-          return undefined;
-        });
-        break;
-      case "all":
-        let all = [];
-        allResources.map((resource) => {
-          all.push(resource);
-          return undefined;
-        });
-        setResources(all);
-        break;
-      default:
-        const unhandled = [];
-        allResources.map((resource) => {
-          if (!resource.done) {
-            unhandled.push(resource);
-          }
-          setResources(unhandled.reverse());
-          return undefined;
-        });
-    }
-  };
+  // const handleClick = (event) => {
+  //   event.preventDefault();
+  //   switch (event.target.getAttribute("eventKey")) {
+  //     case "done":
+  //       const done = [];
+  //       allResources.map((resource) => {
+  //         if (resource.done) {
+  //           done.push(resource);
+  //         }
+  //         setResources(done.reverse());
+  //         return undefined;
+  //       });
+  //       break;
+  //     case "all":
+  //       let all = [];
+  //       allResources.map((resource) => {
+  //         all.push(resource);
+  //         return undefined;
+  //       });
+  //       setResources(all);
+  //       break;
+  //     default:
+  //       const unhandled = [];
+  //       allResources.map((resource) => {
+  //         if (!resource.done) {
+  //           unhandled.push(resource);
+  //         }
+  //         setResources(unhandled.reverse());
+  //         return undefined;
+  //       });
+  //   }
+  // };
   useEffect(() => {
     getResources();
   }, []);
