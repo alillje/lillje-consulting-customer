@@ -61,7 +61,6 @@ const SearchForm = () => {
 
     let url = setUrl(companySanitized, dateSanitized);
 
-    console.log(url)
     if (url) {
       apiUrl = url;
     }
@@ -118,7 +117,6 @@ const SearchForm = () => {
     if (date.length > 0) {
       setMinParams(true);
     }
-    console.log(date)
   }, [minParams, company, date]);
 
   if (loading) {

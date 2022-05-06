@@ -5,7 +5,7 @@
   /* grid-template-columns: 0.2fr repeat(5, 1fr) 0.2fr;
   grid-template-rows: 1fr repeat(6, 1fr) auto; */
 
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 270px repeat(4, 1fr);
   grid-template-rows: 70px repeat(5, 1fr) auto;
   grid-column-gap: 20px;
   grid-row-gap: 20px;

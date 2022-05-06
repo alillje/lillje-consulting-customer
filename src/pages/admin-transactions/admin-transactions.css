@@ -4,16 +4,10 @@
     border: none;
 }
 
-.resourceListContainer {
+.customerList {
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 0.3fr repeat(5, 1fr);
-    grid-column-gap: 20px;
-    grid-row-gap: 20px;
-    margin: 0px 0px 20px 0px;
-    box-sizing: border-box;
+    display: flex;
 }
 
 .accordion-button::after {
@@ -21,7 +15,7 @@
 }
 
 .accordion-button:hover {
-    background-color: #c8c8c8;
+    background-color: #5d6583;
 }
 
 .transactionsTopbar { 

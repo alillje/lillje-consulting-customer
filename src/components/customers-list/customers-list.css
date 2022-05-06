@@ -1,0 +1,14 @@
+.customersList {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.allCustomersHeader {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

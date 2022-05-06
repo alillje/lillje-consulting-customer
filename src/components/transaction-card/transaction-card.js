@@ -15,7 +15,6 @@ import dayjs from "dayjs";
 
 
 const TransactionCard = ({transaction}) => {
-console.log(transaction)
 
     return (
   <React.Fragment>

@@ -6,13 +6,14 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 
 
 const Dashboard = () => {
+  const admin = useSelector((state) => state.user.admin);
 
-
-  return (
+  return admin ? <div>Admin</div> : (
     <div className="dashboardContainer">
       <div className="div1">
       <Link to="/transactions/register">
