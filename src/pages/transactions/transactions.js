@@ -49,7 +49,6 @@ const Transactions = ({ value }) => {
     try {
       setLoading(true);
       const { data } = await axiosApiInstance.get(apiUrl, config);
-      console.log(data);
       setAllResources(data.reverse());
       setResources(data.reverse());
       dispatch(
@@ -71,38 +70,7 @@ const Transactions = ({ value }) => {
     return i++;
   };
 
-  // const handleClick = (event) => {
-  //   event.preventDefault();
-  //   switch (event.target.getAttribute("eventKey")) {
-  //     case "done":
-  //       const done = [];
-  //       allResources.map((resource) => {
-  //         if (resource.done) {
-  //           done.push(resource);
-  //         }
-  //         setResources(done.reverse());
-  //         return undefined;
-  //       });
-  //       break;
-  //     case "all":
-  //       let all = [];
-  //       allResources.map((resource) => {
-  //         all.push(resource);
-  //         return undefined;
-  //       });
-  //       setResources(all);
-  //       break;
-  //     default:
-  //       const unhandled = [];
-  //       allResources.map((resource) => {
-  //         if (!resource.done) {
-  //           unhandled.push(resource);
-  //         }
-  //         setResources(unhandled.reverse());
-  //         return undefined;
-  //       });
-  //   }
-  // };
+
   useEffect(() => {
     getResources();
   }, []);

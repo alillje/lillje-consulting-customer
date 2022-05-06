@@ -100,7 +100,7 @@ const TopBar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            LOGO
+            LILLJE CONSULTING
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
  
@@ -108,6 +108,9 @@ const TopBar = () => {
           {user.auth &&
 
           <Box sx={{ flexGrow: 0 }}>
+                      <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+Inloggad som: {user.admin ? 'Administratör' : user.user.username}
+ </Box>
             <AccountCircleSharpIcon
               onClick={handleOpenUserMenu}
               sx={{ p: 0 }}

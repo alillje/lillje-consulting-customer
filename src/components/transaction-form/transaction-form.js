@@ -147,7 +147,7 @@ const TransactionForm = () => {
             );
           })}
         </TextField>
-        {viewCategories === true && (
+        {viewCategories && (
           <TextField
             value={transactionCategory}
             onChange={(event) => setTransactionCategory(event.target.value)}

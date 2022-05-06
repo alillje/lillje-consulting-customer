@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
 
-import { useState, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
@@ -22,15 +22,18 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux/reducers/user";
 import { loginHandler } from "../../services/login-service";
 
+
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const [user, setUser] = useState(null);
+  const [customer, setCustomer] = useState(false);
+  const [admin, setAdmin] = useState(false);
 
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+
 
   /**
    * Handles login. Contacts auth service.
@@ -47,8 +50,15 @@ const Login = () => {
     };
 
     try {
-      if (await loginHandler(userData)) {
-        navigate("/dashboard");
+      let authUser = await loginHandler(userData)
+
+
+
+      if (jwt_decode(authUser?.access_token).admin) {
+        setAdmin(true)
+    
+      } else {
+        setCustomer(true)
 
       }
       
@@ -58,12 +68,23 @@ const Login = () => {
 
       console.log(error);
     }
-  };
-  const userLoggedIn = useSelector((state) => state.user.auth);
+  
 
-  return userLoggedIn ? (
-    <Navigate to="/dashboard" />
-  ) : (
+
+;}
+
+useEffect(() => {
+  if (admin) {
+      navigate("/admin/transactions");
+  } else if (customer) {
+    navigate("/dashboard");
+
+  }
+}, [admin, customer, navigate])
+
+
+
+return (
     <div className="loginLayoutContainer">
       <div className="loginLayoutHeader">
         <Topbar />
