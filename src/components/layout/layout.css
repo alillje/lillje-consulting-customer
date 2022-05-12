@@ -35,3 +35,34 @@
 
 }
 
+@media screen and (max-width: 900px){
+  .layoutContainer {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+
+  .layoutSidebar {
+    grid-area: 0;
+    display: none;
+  }
+
+  .layoutMain {
+    grid-area: 2 / 1 / auto / 5;
+    margin: 20px 20px 20px 20px;
+
+  }
+
+  .layoutSidebarMobile {
+    grid-column: span 5;
+    transition: (-webkit-transform ease 250ms); 
+    transition: (transform ease 250ms);
+    }
+}
+
+@media print {
+  .layoutMain {
+    grid-area: 2 / 1 / auto / 6;
+    margin: 20px 20px 20px 20px;
+
+  }
+}

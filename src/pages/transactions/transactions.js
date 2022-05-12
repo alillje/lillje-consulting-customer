@@ -11,34 +11,27 @@ import { setTransactions } from "../../redux/reducers/transactions";
 
 import * as React from "react";
 import Button from "@mui/material/Button";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 import Accordion from "react-bootstrap/Accordion";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const Transactions = ({ value }) => {
+const Transactions = (props) => {
   const user = useSelector((state) => state.user);
-  // const transaction = useSelector((state) => state.transaction);
-  const dispatch = useDispatch();
+  const customer = useSelector((state) => state.customer);
+  let value = props.value ? props.value : null;
+  const [status, setStatus] = useState("");
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [allResources, setAllResources] = useState([]);
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(false);
-  let i = 0;
-  let apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`;
+  const [pages, setPages] = useState(0);
+  const [page, setPage] = useState(1);
+  let limit = 10;
+  let apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?page=${page}&limit=${limit}`;
 
-  switch (value) {
-    case "done":
-      apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?done=true`;
-      break;
-    case "open":
-      apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?done=false`;
-      break;
-    default:
-      apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`;
-  }
-
-  // let { contextData } = useContext(AuthContext)
   let config = {
     headers: {
       Authorization: "Bearer " + user.accessToken,
@@ -46,34 +39,64 @@ const Transactions = ({ value }) => {
   };
 
   const getResources = async () => {
+    let url = apiUrl;
+    if (user.admin) {
+      url = `${apiUrl}&author=${customer.id}`;
+    }
+    if (user.admin && status !== "all" && status.length > 0) {
+      url = `${apiUrl}&author=${customer.id}&done=${status}`;
+    } else if (value && value === "done") {
+      url = `${apiUrl}&done=true`;
+    } else if (value && value === "open") {
+      url = `${apiUrl}&done=false`;
+    } else if (value && value === "leverantorsfakturor") {
+      url = `${apiUrl}&transactionType=Leverantörsfaktura`;
+    } else if (value && value === "kundfakturor") {
+      url = `${apiUrl}&transactionType=Kundfaktura`;
+    } else if (value && value === "utlagg") {
+      url = `${apiUrl}&transactionType=Utlägg`;
+    }
     try {
       setLoading(true);
-      const { data } = await axiosApiInstance.get(apiUrl, config);
-      setAllResources(data.reverse());
-      setResources(data.reverse());
+      const { data } = await axiosApiInstance.get(url, config);
+
+      setResources(data.resources);
+      setPages(data.pages);
       dispatch(
         setTransactions({
-          transactions: data,
+          transactions: data.resources,
           sub: user.user.sub,
         })
       );
       setLoading(false);
     } catch (error) {
-      dispatch(
-        logout()
-      );
+      console.log(error);
+      dispatch(logout());
       console.log("Error in transactions.js");
     }
   };
 
-  const getId = () => {
-    return i++;
+  const handleChange = (event) => {
+    if (event.target.getAttribute("data-testid") === "NavigateBeforeIcon") {
+      let prevPage = page - 1;
+      setPage(prevPage);
+    } else if (event.target.getAttribute("aria-label") === "Go to next page") {
+      let prevPage = page - 1;
+      setPage(prevPage);
+    } else if (
+      event.target.getAttribute("data-testid") === "NavigateNextIcon"
+    ) {
+      let prevPage = page + 1;
+      setPage(prevPage);
+    } else if (
+      event.target.getAttribute("aria-label") === "Go to previous page"
+    ) {
+      let prevPage = page - 1;
+      setPage(prevPage);
+    } else {
+      setPage(parseInt(event.target.textContent));
+    }
   };
-
-
-  useEffect(() => {
-    getResources();
-  }, []);
 
   const goToTransaction = (event) => {
     event.preventDefault();
@@ -83,48 +106,83 @@ const Transactions = ({ value }) => {
         sub: user.user.sub,
       })
     );
-    navigate(`/transactions/${event.target.getAttribute("data")}`);
+    user.admin
+      ? navigate(`/admin/transactions/${event.target.getAttribute("data")}`)
+      : navigate(`/transactions/${event.target.getAttribute("data")}`);
   };
+
+  const setValue = (event) => {
+    switch (event.target.value) {
+      case "done":
+        setStatus("true");
+        break;
+      case "open":
+        setStatus("false");
+        break;
+      default:
+        setStatus("");
+    }
+  };
+
+  useEffect(() => {
+    getResources();
+  }, [page, value, status]);
 
   return (
     <div className="resourceListContainer">
-      <div className="transactionsTopbar">
-        
-        {value === "all" && <h2>Alla transaktioner</h2>}
-
-        {value === "done" && <h2>Hanterade transaktioner</h2>}
-        {value === "open" && <h2>Ohanterade transaktioner</h2>}
-
-        {/* <Button
-          onClick={handleClick}
-          eventKey="all"
-          id="basic-button"
-          aria-haspopup="true"
-        >
-          Alla transaktioner
-        </Button>
-        <Button
-          onClick={handleClick}
-          eventKey="done"
-          id="basic-button"
-          aria-haspopup="true"
-        >
-          Hanterade
-        </Button>
-        <Button onClick={handleClick} id="basic-button" aria-haspopup="true">
-          Ohanterade
-        </Button> */}
+      <div className="transactionsHeader">
+        {user.admin && <h3>Transaktioner för {customer.company}</h3>}
       </div>
+
+      {customer && (
+        <div className="transactionsHeader">
+          {value === "all" && <h2>Alla transaktioner</h2>}
+
+          {value === "done" && <h2>Hanterade transaktioner</h2>}
+          {value === "open" && <h2>Ohanterade transaktioner</h2>}
+          {value === "leverantorsfakturor" && <h2>Leveranörsfakturor</h2>}
+          {value === "kundfakturor" && <h2>Kundfakturor</h2>}
+          {value === "utlagg" && <h2>Utlägg</h2>}
+
+
+        </div>
+      )}
+      {user.admin && (
+        <div className="transactionsTopbar">
+          <Button
+            onClick={setValue}
+            value="all"
+            id="basic-button"
+            aria-haspopup="true"
+          >
+            Alla transaktioner
+          </Button>
+          <Button
+            onClick={setValue}
+            value="done"
+            id="basic-button"
+            aria-haspopup="true"
+          >
+            Hanterade
+          </Button>
+          <Button
+            onClick={setValue}
+            value="open"
+            id="basic-button"
+            aria-haspopup="true"
+          >
+            Ohanterade
+          </Button>
+        </div>
+      )}
       {loading ? (
         <CircularProgress className="loadingSpinner" />
       ) : (
         <div className="resourceList">
           {resources.map((resource) => {
-            let id = getId();
-
             return (
               <Accordion key={resource.id}>
-                <Accordion.Item eventKey={id} data={resource.author}>
+                <Accordion.Item eventKey={resource.id} data={resource.author}>
                   <Accordion.Header>
                     {resource?.company} -{" "}
                     {dayjs.unix(resource?.invoiceDate).format("YYYY/MM/DD")}
@@ -146,6 +204,14 @@ const Transactions = ({ value }) => {
               </Accordion>
             );
           })}
+        </div>
+      )}
+
+      {pages > 0 && (
+        <div className="transactionsPagination">
+          <Stack spacing={2}>
+            <Pagination onChange={handleChange} count={pages} size="large" />
+          </Stack>
         </div>
       )}
     </div>

@@ -11,32 +11,23 @@
 }
 
 .accordion-button::after {
-    color: #050412;
+    color: #e9e9e9;
 }
 
 .accordion-button:hover {
-    background-color: #5d6583;
+    background-color: #e9e9e9;
 }
 
-.transactionsTopbar { 
-grid-area: 1 / 1 / 2 / 3;
-display: flex;
-justify-content: center;
-}
 
-.transactionsTopbar button { 
-    grid-area: 1 / 1 / 2 / 3;
-    display: flex;
-    justify-content: center;
-    }
-
+/* 
 .resourceList {
     grid-area: 2 / 1 / 6 / 3;
     margin: 0px 0px 20px 0px;
-}
+} */
 
-.loadingSpinner {
+/* .loadingSpinner {
     margin: 0 auto;
     grid-area: 3 / 1 / 6 / 3;
 
-}
+} */
+

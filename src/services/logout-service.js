@@ -15,7 +15,7 @@ export const logoutHandler = async (user) => {
     refreshToken: store.getState().user.refreshToken,
   };
   try {
-await axios.post("/api/v1/logout", refreshTokenToDelete, {
+await axios.post(`${process.env.REACT_APP_AUTH_API}/logout`, refreshTokenToDelete, {
       headers: {
         "Content-Type": "application/json",
       },

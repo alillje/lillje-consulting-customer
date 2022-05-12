@@ -12,3 +12,20 @@
     align-items: center;
     text-align: center;
 }
+
+.customerListLoadingSpinner {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.customersPagination {
+    grid-row: 6; 
+    grid-column: 1 / 4;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}

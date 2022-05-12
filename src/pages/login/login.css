@@ -21,10 +21,6 @@
     grid-area: 2 / 3 / 7 / 5;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     padding: 10px;
-
-
-  
-  
   }
   .loginLayoutRight {
     grid-area: 2 / 5 / 6 / 7;
@@ -35,3 +31,16 @@
       background-color: #484848;
   }
 
+
+@media screen and (max-width: 1400px) {
+  .mainLogin {
+    grid-area: 2 / 2 / 7 / 6;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .mainLogin {
+    grid-area: 2 / 1 / 8 / 7;
+    margin-left: 20px;
+  }
+}

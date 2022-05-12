@@ -8,7 +8,7 @@ import "./search-form.css";
 import axiosApiInstance from "../../services/axios-interceptor";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
-import { setTransaction } from "../../redux/reducers/transaction";
+import transaction, { setTransaction } from "../../redux/reducers/transaction";
 
 import { useSelector, useDispatch } from "react-redux";
 import Accordion from "react-bootstrap/Accordion";
@@ -18,6 +18,8 @@ import validator from "validator";
 // Alert
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 // TODO: Valitation of input
 const SearchForm = () => {
@@ -27,28 +29,44 @@ const SearchForm = () => {
   const [company, setCompany] = useState("");
   const [date, setDate] = useState("");
   const [minParams, setMinParams] = useState(false);
-  const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
   const [completeSearch, setCompleteSearch] = useState(false);
+  const [transactionType, setTransactionType] = useState("");
+  const transactionTypes = ["Leverantörsfaktura", "Kundfaktura", "Utlägg"];
+  const [pages, setPages] = useState(0);
+  const [page, setPage] = useState(1);
+  let limit = 10;
   let apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   let i = 0;
-
-  const setUrl = (companySanitized, dateSanitized) => {
+  // Construct url from params
+  const setUrl = (
+    companySanitized,
+    dateSanitized,
+    transactionTypeSanitized
+  ) => {
     let url;
-    if (companySanitized.length > 0 && dateSanitized.length > 0) {
+    if (
+      companySanitized.length > 0 &&
+      dateSanitized.length > 0 &&
+      transactionTypeSanitized.length > 0
+    ) {
       url = `${apiUrl}?company=${companySanitized.replace(
         " ",
         "+"
-      )}&invoiceDate=${new Date(dateSanitized).getTime() / 1000}`;
+      )}&invoiceDate=${
+        new Date(dateSanitized).getTime() / 1000
+      }&transactionType=${transactionTypeSanitized}`;
       setMinParams(true);
     } else if (companySanitized.length > 0) {
       url = `${apiUrl}?company=${companySanitized.replace(" ", "+")}`;
     } else if (dateSanitized.length > 0) {
       url = `${apiUrl}?invoiceDate=${new Date(dateSanitized).getTime() / 1000}`;
+    } else if (transactionType.length > 0) {
+      url = `${apiUrl}?transactionType=${transactionTypeSanitized}`;
     }
     return url;
   };
@@ -58,11 +76,13 @@ const SearchForm = () => {
     // Sanitize html and set search params
     const companySanitized = validator.escape(company);
     const dateSanitized = validator.escape(date);
+    const transactionTypeSantized = validator.escape(transactionType);
 
-    let url = setUrl(companySanitized, dateSanitized);
+    let url = setUrl(companySanitized, dateSanitized, transactionTypeSantized);
 
     if (url) {
-      apiUrl = url;
+      apiUrl = `${url}&limit=10`;
+      setMinParams(true);
     }
 
     if (minParams) {
@@ -74,12 +94,13 @@ const SearchForm = () => {
       try {
         setLoading(true);
         const { data } = await axiosApiInstance.get(apiUrl, reqHeaders);
+        setTransactions(data.resources);
+        setPages(data.pages);
+        setErrorMessage("");
+        setDate("");
+        setCompany("");
         setCompleteSearch(true);
         setLoading(false);
-        setTransactions(data);
-        setErrorMessage("");
-        setDate("")
-        setCompany("")
       } catch (error) {
         setLoading(false);
         setErrorMessage("Ett oväntat fel inträffade");
@@ -100,14 +121,32 @@ const SearchForm = () => {
     navigate(`/transactions/${event.target.getAttribute("data")}`);
   };
 
-  const getId = () => {
-    return i++;
-  };
-
   const newSearch = () => {
     setCompleteSearch(false);
     setMinParams(false);
     setCompany("");
+  };
+
+  const handleChange = (event) => {
+    if (event.target.getAttribute("data-testid") === "NavigateBeforeIcon") {
+      let prevPage = page - 1;
+      setPage(prevPage);
+    } else if (event.target.getAttribute("aria-label") === "Go to next page") {
+      let prevPage = page - 1;
+      setPage(prevPage);
+    } else if (
+      event.target.getAttribute("data-testid") === "NavigateNextIcon"
+    ) {
+      let prevPage = page + 1;
+      setPage(prevPage);
+    } else if (
+      event.target.getAttribute("aria-label") === "Go to previous page"
+    ) {
+      let prevPage = page - 1;
+      setPage(prevPage);
+    } else {
+      setPage(parseInt(event.target.textContent));
+    }
   };
 
   useEffect(() => {
@@ -116,8 +155,10 @@ const SearchForm = () => {
     }
     if (date.length > 0) {
       setMinParams(true);
+    } if(transactionType.length > 0) {
+      setMinParams(true)
     }
-  }, [minParams, company, date]);
+  }, [minParams, company, date, page, transactionType]);
 
   if (loading) {
     return (
@@ -135,11 +176,9 @@ const SearchForm = () => {
         <div className="searchTransactionList">
           {transactions?.length ? (
             transactions.map((transaction) => {
-              let id = getId();
-
               return (
                 <Accordion key={transaction.id}>
-                  <Accordion.Item eventKey={id} data={transaction.author}>
+                  <Accordion.Item eventKey={transaction.id} data={transaction.author}>
                     <Accordion.Header>
                       {transaction?.company} -{" "}
                       {dayjs
@@ -171,9 +210,16 @@ const SearchForm = () => {
             <div className="searchNoResults">Inget resultat</div>
           )}
         </div>
+        <div className="searchResPagination">
+          <Stack spacing={2}>
+            <Pagination onChange={handleChange} count={pages} size="large" />
+          </Stack>
+        </div>
+        <div className="newSearch">
         <Button variant="text" onClick={newSearch} sx={{ color: "#000000" }}>
           &#171; Ny sökning
         </Button>
+        </div>
       </div>
     );
   } else {
@@ -206,17 +252,18 @@ const SearchForm = () => {
           />
 
           <TextField
-            value={type}
-            onChange={(e) => setType(e.target.value)}
+            value={transactionType}
+            onChange={(e) => setTransactionType(e.target.value)}
             select // tell TextField to render select
             label="Typ av transaktion"
           >
-            <MenuItem key={1} value="test">
-              Test 1
-            </MenuItem>
-            <MenuItem key={2} value="test2">
-              Test 2
-            </MenuItem>
+            {transactionTypes.map((type) => {
+              return (
+                <MenuItem key={type} value={type}>
+                  {type}
+                </MenuItem>
+              );
+            })}
           </TextField>
           <TextField
             onChange={(event) => setDate(event.target.value)}

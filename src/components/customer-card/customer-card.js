@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import "./customer-card.css";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/reducers/user";
@@ -16,8 +16,10 @@ import { setCustomer } from "../../redux/reducers/customer";
 import { useEffect, useState } from "react";
 import axiosApiInstance from "../../services/axios-interceptor";
 
-const CustomerCard = ( {customerId} ) => {
+const CustomerCard = () => {
   const user = useSelector((state) => state.user);
+  const admin = useSelector((state) => state.user.admin);
+
   const [customer, setCustomer] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -34,20 +36,20 @@ const CustomerCard = ( {customerId} ) => {
     try {
       setLoading(true);
       const { data } = await axiosApiInstance.get(
-        `${process.env.REACT_APP_AUTH_API}/users/${customerId}`,
+        `${process.env.REACT_APP_AUTH_API}/user/${user.user.sub}`,
         config
       );
       setLoading(false);
       setCustomer(await data);
+
     } catch (error) {
       dispatch(logout());
-      console.log("Error in admin-tranasctions.js");
+      console.log("Error in customer-card.js");
     }
   };
 
   const goToTransactions = () => {
-      console.log('goToTransactions')
-      navigate(`/admin/customers/${customer.id}/transactions`)
+      navigate("/transactions")
   }
   
   useEffect(() => {
@@ -63,20 +65,19 @@ const CustomerCard = ( {customerId} ) => {
 
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-            {customer.username}
+            {customer.company}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Organisationsnummer: 123456-1234
-        </Typography>
+        {!customer.admin && <Typography variant="body2" color="text.secondary">
+          Organisationsnummer: {customer.orgNo}
+        </Typography>}
         <Typography variant="body2" color="text.secondary">
           Email: {customer.email}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={goToTransactions}>Transaktioner</Button>
-        <Button size="small">Ändra epostadress</Button>
-
-        <Button size="small">Återställ lösenord</Button>
+        {!customer.admin && <Button size="small" onClick={goToTransactions}>Transaktioner</Button>}
+        <Button size="small" component={Link} to="/mina-uppgifter/uppdatera">Ändra uppgifter</Button>
+        <Button size="small" component={Link} to="/mina-uppgifter/password/uppdatera">Ändra lösenord</Button>
       </CardActions>
     </Card>
     </div>
