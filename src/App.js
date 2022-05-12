@@ -10,18 +10,21 @@ import Layout from "./components/layout/layout";
 import Login from "./pages/login/login";
 import Register from "./pages/register/register";
 import Dashboard from "./pages/dashboard/dashboard";
+import MyPages from "./pages/my-pages/my-pages";
+
 import Transaction from "./pages/transaction/transaction";
 import Transactions from "./pages/transactions/transactions";
-import TransactionsDone from "./pages/transactions-done/transactions-done";
-import TransactionsOpen from "./pages/transactions-open/transactions-open";
 import TransactionsSearch from "./pages/transactions-search/transactions-search";
 import RegisterTransaction from "./pages/register-transactions/register-transaction";
+import UpdateCredentials from "./pages/update-credentials/update-credentials";
+import UpdatePassword from "./pages/update-password/update-password";
 
 // Admin Pages
 import AdminTransactions from "./pages/admin-transactions/admin-transactions";
 import AdminCustomers from "./pages/admin-customers/admin-customers";
 import AdminCustomer from "./pages/admin-customer/admin-customer";
-import AdminCustomerTransactions from "./pages/admin-customer-transactions/admin-customer-transactions";
+import RegisterCustomer from "./pages/register-customer/register-customer";
+
 import AdminCustomerTransaction from "./pages/admin-customer-transaction/admin-customer-transaction";
 
 // Error
@@ -34,11 +37,18 @@ function App() {
     <Router>
 
           <Routes>
-            <Route exact path="/" element={<Login />} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/register" element={<Register />} />
 
             {/* Protected routes */}
+
+            <Route element={<ProtectedRoute />}>
+              <Route
+                exact
+                path="/"
+                element={<Layout children={<Dashboard />} />}
+              />
+            </Route>
             <Route element={<ProtectedRoute />}>
               <Route
                 exact
@@ -46,6 +56,31 @@ function App() {
                 element={<Layout children={<Dashboard />} />}
               />
             </Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route
+                exact
+                path="/mina-uppgifter"
+                element={<Layout children={<MyPages />} />}
+              />
+            </Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route
+                exact
+                path="/mina-uppgifter/password/uppdatera"
+                element={<Layout children={<UpdatePassword />} />}
+              />
+            </Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route
+                exact
+                path="/mina-uppgifter/uppdatera"
+                element={<Layout children={<UpdateCredentials />} />}
+              />
+            </Route>
+
             <Route element={<ProtectedRoute />}>
               <Route
                 path="/transactions/:id"
@@ -70,7 +105,7 @@ function App() {
               <Route
                 exact
                 path="/transactions/done"
-                element={<Layout children={<TransactionsDone />} />}
+                element={<Layout children={<Transactions value='done' />} />}
               />
             </Route>
 
@@ -78,7 +113,31 @@ function App() {
               <Route
                 exact
                 path="/transactions/open"
-                element={<Layout children={<TransactionsOpen />} />}
+                element={<Layout children={<Transactions value='open' />} />}
+              />
+            </Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route
+                exact
+                path="/transactions/leverantorsfakturor"
+                element={<Layout children={<Transactions value='leverantorsfakturor' />} />}
+              />
+            </Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route
+                exact
+                path="/transactions/kundfakturor"
+                element={<Layout children={<Transactions value='kundfakturor' />} />}
+              />
+            </Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route
+                exact
+                path="/transactions/utlagg"
+                element={<Layout children={<Transactions value='utlagg' />} />}
               />
             </Route>
 
@@ -108,8 +167,24 @@ function App() {
             <Route element={<AdminRoute />}>
               <Route
                 exact
+                path="/admin/transactions/search"
+                element={<Layout children={<TransactionsSearch />} />}
+              />
+            </Route>
+
+            <Route element={<AdminRoute />}>
+              <Route
+                exact
                 path="/admin/customers"
                 element={<Layout children={<AdminCustomers />} />}
+              />
+            </Route>
+
+            <Route element={<AdminRoute />}>
+              <Route
+                exact
+                path="/admin/customers/register"
+                element={<Layout children={<RegisterCustomer />} />}
               />
             </Route>
 
@@ -125,7 +200,7 @@ function App() {
               <Route
                 exact
                 path="/admin/customers/:id/transactions"
-                element={<Layout children={<AdminCustomerTransactions />} />}
+                element={<Layout children={<Transactions />} />}
               />
             </Route>
 
@@ -134,6 +209,14 @@ function App() {
                 exact
                 path="/admin/transactions/:id"
                 element={<Layout children={<Transaction />} />}
+              />
+            </Route>
+
+            <Route element={<AdminRoute />}>
+              <Route
+                exact
+                path="/admin/mina-uppgifter"
+                element={<Layout children={<MyPages />} />}
               />
             </Route>
 

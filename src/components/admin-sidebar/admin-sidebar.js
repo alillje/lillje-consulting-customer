@@ -15,15 +15,13 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
 // Icons
-import AddBoxSharpIcon from "@mui/icons-material/AddBoxSharp";
-import PeopleSharpIcon from '@mui/icons-material/PeopleSharp';
-import ArticleSharpIcon from '@mui/icons-material/ArticleSharp';
-import PersonSearchSharpIcon from '@mui/icons-material/PersonSearchSharp';
-import FindInPageSharpIcon from '@mui/icons-material/FindInPageSharp';
-import ViewListSharpIcon from "@mui/icons-material/ViewListSharp";
+import PeopleSharpIcon from "@mui/icons-material/PeopleSharp";
+import ArticleSharpIcon from "@mui/icons-material/ArticleSharp";
+import PersonSearchSharpIcon from "@mui/icons-material/PersonSearchSharp";
+import FindInPageSharpIcon from "@mui/icons-material/FindInPageSharp";
+import PeopleOutlineSharpIcon from "@mui/icons-material/PeopleOutlineSharp";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import LogoutSharpIcon from "@mui/icons-material/LogoutSharp";
-import ManageSearchSharpIcon from "@mui/icons-material/ManageSearchSharp";
-import KeyboardDoubleArrowRightSharpIcon from '@mui/icons-material/KeyboardDoubleArrowRightSharp';
 import { useSelector } from "react-redux";
 import { logoutHandler } from "../../services/logout-service";
 
@@ -33,7 +31,7 @@ import { logoutHandler } from "../../services/logout-service";
  * @param {*} props
  * @return {*}
  */
-const AdminSidebar = () => {
+const AdminSidebar = ({ width = undefined }) => {
   const user = useSelector((state) => state.user);
 
   const handleLogout = () => {
@@ -46,7 +44,7 @@ const AdminSidebar = () => {
     setOpen(!open);
   };
 
-  const drawerWidth = 250;
+  const drawerWidth = width ? width : 250;
   return (
     <Drawer
       className="adminsidebarDrawer"
@@ -89,10 +87,22 @@ const AdminSidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Hitta transaktion" />
           </ListItem>
- 
 
+          <ListItem button component={Link} to="/admin/customers/register">
+            <ListItemIcon>
+              <GroupAddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Registrera ny kund" />
+          </ListItem>
 
           <Divider />
+
+          <ListItem button component={Link} to="/admin/mina-uppgifter">
+            <ListItemIcon>
+              <PeopleOutlineSharpIcon />
+            </ListItemIcon>
+            <ListItemText primary="Mina uppgifter" />
+          </ListItem>
           <ListItem button onClick={handleLogout}>
             <ListItemIcon>
               <LogoutSharpIcon />

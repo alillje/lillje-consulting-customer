@@ -10,7 +10,6 @@ const axiosApiInstance = axios.create();
 
 axiosApiInstance.interceptors.request.use((config) => {
   console.log('Request OK')
-  console.log(config)
     return config;
 }, function (error) {
   console.log('Request error!')
@@ -27,15 +26,15 @@ console.log('Response is OK!')
 }, async function (error) {
 
   console.log('Response Error!')
-  const originalConfig = error.config;
+  const originalRequest = error.config;
 
-  if (error.request.status === 401 && error.config && !originalConfig._retry) {
-    
+  if (error.request.status === 401 && !originalRequest._retry) {
+    originalRequest._retry = true
     const configBody = JSON.stringify({
       refreshToken: store.getState().user.refreshToken,
     });
 
-    const res = await axiosApiInstance.post("/api/v1/refresh", configBody, {
+    const res = await axiosApiInstance.post(`${process.env.REACT_APP_AUTH_API}/refresh`, configBody, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -55,7 +54,7 @@ console.log('Response is OK!')
     error.config.headers['Authorization'] = 'Bearer ' + res.data.access_token
     error.config.headers['Content-Type'] = 'application/json'
 
-    return await axios.request(error.config)
+    return axiosApiInstance(originalRequest)
 
   }
 

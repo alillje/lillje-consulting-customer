@@ -12,3 +12,13 @@
     color: #ffffff;
 
 }
+
+.topbarHomeButtonMobile {
+    text-decoration: none;
+    color: #ffffff; 
+}
+
+.topbarHomeButtonMobile:hover {
+    color: #ffffff;
+
+}

@@ -19,12 +19,14 @@ import MenuItem from "@mui/material/MenuItem";
 import Accordion from "react-bootstrap/Accordion";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const AdminTransactions = ({ value }) => {
+const AdminTransactions = () => {
   const user = useSelector((state) => state.user);
   const stateCustomer = useSelector((state) => state.customer);
 
+
   const [customers, setCustomers] = useState([]);
-  const [customer, setCustomer] = useState("");
+  const [customer, setCustomer] = useState({});
+  const [companyName, setCompanyName] = useState("");
   // const transaction = useSelector((state) => state.transaction);
   const dispatch = useDispatch();
 
@@ -48,9 +50,11 @@ const AdminTransactions = ({ value }) => {
         config
       );
       setLoading(false);
-      setCustomers(await data);
+      setCustomers(await data.users);
     } catch (error) {
+      if (error.status === 401) {
       dispatch(logout());
+      }
       console.log("Error in admin-tranasctions.js");
     }
   };
@@ -63,11 +67,11 @@ const AdminTransactions = ({ value }) => {
     event.preventDefault();
     dispatch(
       setStateCustomer({
-        customer: customer,
+        customer: customer.id,
+        company: customer.company
       })
     );
-    console.log(stateCustomer);
-    navigate(`/admin/customers/${customer}/transactions`);
+    navigate(`/admin/customers/${customer.id}/transactions`);
   };
 
   return (
@@ -86,19 +90,20 @@ const AdminTransactions = ({ value }) => {
           >
             <TextField
               value={customer}
-              onChange={(e) => setCustomer(e.target.value)}
+              onChange={event => (setCustomer(event.target.value))}
               select // tell TextField to render select
               label="Välj kund"
+              sx={ { width: "100%" } }
             >
               {customers.map((cust) => {
                 return (
-                  <MenuItem key={cust.id} value={cust.id}>
-                    {cust.username}
+                  <MenuItem key={cust.id} value={cust} >
+                    {cust.company}
                   </MenuItem>
                 );
               })}
             </TextField>
-            <Button onClick={goToTransactions}>Visa transaktioner</Button>
+            {customer?.id && <Button onClick={goToTransactions}>Visa transaktioner</Button>}
           </Box>
         </div>
       )}

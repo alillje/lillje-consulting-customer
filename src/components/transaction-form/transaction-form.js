@@ -6,6 +6,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import "./transaction-form.css";
 import axiosApiInstance from "../../services/axios-interceptor";
+import axios from "axios";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import { setTransaction } from "../../redux/reducers/transaction";
@@ -28,6 +30,7 @@ const TransactionForm = () => {
   const [transactionCategory, setTransactionCategory] = useState("");
   const [transactionType, setTransactionType] = useState("");
   const [viewCategories, setViewCategories] = useState(true);
+  const [file, setFile] = useState();
 
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -45,16 +48,33 @@ const TransactionForm = () => {
     "Övrigt"
     ];
 
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    let fileUrl = ""
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET);
+      const dataRes = await axios.post(
+        process.env.REACT_APP_CLOUDINARY_UPLOAD,
+        formData
+      );
+      fileUrl = dataRes.data.url;
+    }
+
+
+
     const reqBody = {
       description: validator.escape(description),
+      authorName: user.company,
       company: validator.escape(company),
       transactionType: validator.escape(transactionType),
       transactionCategory: transactionType !== "Leverantörsfaktura" ? validator.escape(transactionCategory) : "Försäljning",
       amount: validator.escape(amount),
       author: validator.escape(user.user.sub),
       date: new Date(date).getTime() / 1000,
+      documentUrl: fileUrl
     };
     let reqHeaders = {
       headers: {
@@ -77,7 +97,7 @@ const TransactionForm = () => {
             sub: user.user.sub,
           })
         );
-        navigate(`/transactions/${data.id}`);
+        navigate(`/transactions/${data.id}`, { state: {message: "Transaktionen har registrerats"} });
       } catch (error) {
         console.log(error);
         console.log("Error in transaction/register");
@@ -114,6 +134,12 @@ const TransactionForm = () => {
     <CircularProgress />
   ) : (
     <div>
+              {errorMessage && (
+          <Alert severity="info" className="searchErrorMessage">
+            <AlertTitle>Ett fel inträffade</AlertTitle>
+            {errorMessage}
+          </Alert>
+        )}
       <div className="trasactionFormHeader">
         <h5> Registrera ny transaktion</h5>
       </div>
@@ -126,12 +152,6 @@ const TransactionForm = () => {
         autoComplete="off"
         onSubmit={handleSubmit}
       >
-        {errorMessage && (
-          <Alert severity="info" className="searchErrorMessage">
-            <AlertTitle>Ett fel inträffade</AlertTitle>
-            {errorMessage}
-          </Alert>
-        )}
 
 <TextField
           value={transactionType}
@@ -202,7 +222,17 @@ const TransactionForm = () => {
             shrink: true,
           }}
         />
-        <Button type="submit">Registrera</Button>
+                  <TextField
+                  type="file"
+                    className="position-relative mt-2"
+                    name="file"
+                    accept="image/png, image.jpg, application/pdf"
+                    onChange={(e) => setFile(e.target.files[0])}
+                    id="validationFormik107"
+                    feedbackTooltip
+                  />
+
+        <Button type="submit">Registrera transaktion</Button>
       </Box>
     </div>
   );

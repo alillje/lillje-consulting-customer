@@ -1,21 +1,20 @@
 import "./admin-customer.css";
-import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../redux/reducers/user";
-
-import { useEffect, useState } from "react";
-import axiosApiInstance from "../../services/axios-interceptor";
-import CustomerCard from "../../components/customer-card/customer-card";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import AdminCustomerCard from "../../components/admin-customer-card/admin-customer-card";
 
 import * as React from "react";
 
 const AdminCustomer = () => {
   const user = useSelector((state) => state.user);
   const customer = useSelector((state) => state.customer);
-  const dispatch = useDispatch();
+  const location = useLocation();
 
-  const [loading, setLoading] = useState(false);
-
-  return <CustomerCard customerId={customer.id} />;
+  return (
+    <AdminCustomerCard
+      customerId={customer.id ? customer.id : location.state.id}
+    />
+  );
 };
 
 export default AdminCustomer;

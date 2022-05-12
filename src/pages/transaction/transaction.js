@@ -3,9 +3,11 @@ import { useState, useEffect } from "react"
 import TransactionCard from "../../components/transaction-card/transaction-card"
 import { useSelector } from "react-redux";
 import axiosApiInstance from "../../services/axios-interceptor";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../../redux/reducers/user";
 import { useDispatch } from "react-redux";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 
 
@@ -20,6 +22,7 @@ const Transaction = () => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate()
+    const location = useLocation();
     const dispatch = useDispatch();
 
 
@@ -53,6 +56,7 @@ const Transaction = () => {
     
 
     useEffect(() => {
+      console.log(location.state?.message)
         if (transaction) {
         getTransaction();
         } else {
@@ -63,6 +67,9 @@ const Transaction = () => {
     return (
         
         <div>
+           {location.state?.message &&       <Alert severity="success">
+        <AlertTitle>{location.state?.message}</AlertTitle>
+      </Alert>}
         {loading ? <CircularProgress /> : <TransactionCard transaction={data} />}
         </div>
 

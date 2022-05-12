@@ -20,8 +20,13 @@ import ViewListSharpIcon from "@mui/icons-material/ViewListSharp";
 import LogoutSharpIcon from "@mui/icons-material/LogoutSharp";
 import ManageSearchSharpIcon from "@mui/icons-material/ManageSearchSharp";
 import KeyboardDoubleArrowRightSharpIcon from '@mui/icons-material/KeyboardDoubleArrowRightSharp';
-import { useSelector } from "react-redux";
+import PeopleOutlineSharpIcon from '@mui/icons-material/PeopleOutlineSharp';
+import { useSelector, useDispatch } from "react-redux";
+import { showSidemenu, hideSidemenu } from "../../redux/reducers/sidemenu";
+
 import { logoutHandler } from "../../services/logout-service";
+import { useEffect } from "react"
+
 
 /**
  * Component
@@ -29,7 +34,7 @@ import { logoutHandler } from "../../services/logout-service";
  * @param {*} props
  * @return {*}
  */
-const Sidebar = () => {
+const Sidebar = ({ width=undefined }) => {
   const user = useSelector((state) => state.user);
 
   const handleLogout = () => {
@@ -42,7 +47,8 @@ const Sidebar = () => {
     setOpen(!open);
   };
 
-  const drawerWidth = 250;
+
+  const drawerWidth = width ? width : 250;
   return (
     <Drawer
       className="sidebarDrawer"
@@ -112,7 +118,7 @@ const Sidebar = () => {
               <ListItem
                 button
                 component={Link}
-                to="/transactions"
+                to="/transactions/leverantorsfakturor"
                 sx={{ pl: 4 }}
               >
                 <ListItemIcon>
@@ -124,7 +130,7 @@ const Sidebar = () => {
               <ListItem
                 button
                 component={Link}
-                to="/transactions"
+                to="/transactions/kundfakturor"
                 sx={{ pl: 4 }}
               >
                 <ListItemIcon>
@@ -136,7 +142,7 @@ const Sidebar = () => {
               <ListItem
                 button
                 component={Link}
-                to="/transactions"
+                to="/transactions/utlagg"
                 sx={{ pl: 4 }}
               >
                 <ListItemIcon>
@@ -155,6 +161,12 @@ const Sidebar = () => {
             <ListItemText primary="Hitta transaktion" />
           </ListItem>
           <Divider />
+          <ListItem button component={Link} to="/mina-uppgifter">
+            <ListItemIcon>
+              <PeopleOutlineSharpIcon />
+            </ListItemIcon>
+            <ListItemText primary="Mina uppgifter" />
+          </ListItem>
           <ListItem button onClick={handleLogout}>
             <ListItemIcon>
               <LogoutSharpIcon />

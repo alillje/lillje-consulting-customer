@@ -4,14 +4,17 @@ import { createSlice } from "@reduxjs/toolkit";
 export const customerSlice = createSlice({
   name: "customer",
   initialState: {
-    id: null
+    id: null,
+    company: null,
   },
   reducers: {
     setStateCustomer: (state, action) => {
       state.id = action.payload.customer;
+      state.company = action.payload.company;
     },
     clearStateCustomer: (state) => {
       state.id = null;
+      state.company = null;
     }
   },
 });

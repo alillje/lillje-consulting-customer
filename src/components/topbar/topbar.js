@@ -11,18 +11,31 @@ import MenuItem from "@mui/material/MenuItem";
 import AccountCircleSharpIcon from "@mui/icons-material/AccountCircleSharp";
 
 import "./topbar.css"
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { showSidemenu, hideSidemenu } from "../../redux/reducers/sidemenu";
+
 import { logoutHandler } from "../../services/logout-service";
 
 import { Link } from "react-router-dom";
 
 const TopBar = () => {
   const user = useSelector((state) => state.user);
+  const sidemenu = useSelector((state) => state.sidemenu);
+  const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [showSideMenu, setShowSideMenu] = React.useState(false);
 
   const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
+    if (sidemenu.show) {
+      dispatch(hideSidemenu())
+    } else {
+      dispatch(showSidemenu())
+    }
+    // setAnchorElNav(event.currentTarget);
+    // console.log(showSideMenu)
+    console.log(sidemenu)
+
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -30,6 +43,10 @@ const TopBar = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+    console.log('navmenu')
+    // console.log(showSideMenu)
+
+
   };
 
   const handleCloseUserMenu = () => {
@@ -95,9 +112,11 @@ const TopBar = () => {
             </Menu>
           </Box>
           <Typography
+            component={Link}
+            to="/dashboard"
             variant="h6"
             noWrap
-            component="div"
+            className="topbarHomeButtonMobile"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
             LILLJE CONSULTING
@@ -108,9 +127,9 @@ const TopBar = () => {
           {user.auth &&
 
           <Box sx={{ flexGrow: 0 }}>
-                      <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-Inloggad som: {user.admin ? 'Administratör' : user.user.username}
- </Box>
+                 {user.auth && <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+Inloggad som: {user.admin ? 'Administratör' : user.user.company}
+ </Box>}
             <AccountCircleSharpIcon
               onClick={handleOpenUserMenu}
               sx={{ p: 0 }}
