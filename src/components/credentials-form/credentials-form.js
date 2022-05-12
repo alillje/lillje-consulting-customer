@@ -53,7 +53,6 @@ const CredentialsForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(user)
     const reqBody = {
       email: validator.escape(email),
     };

@@ -1,5 +1,7 @@
 import store from "../redux/store";
 import { logout } from "../redux/reducers/user";
+import { hideSidemenu } from "../redux/reducers/sidemenu";
+
 import axios from "axios";
 
 
@@ -26,11 +28,17 @@ await axios.post(`${process.env.REACT_APP_AUTH_API}/logout`, refreshTokenToDelet
     store.dispatch(
       logout()
     );
+    store.dispatch(
+      hideSidemenu()
+    );
   } catch (error) {
     localStorage.removeItem("lc_ab_mb_token");
     localStorage.removeItem("lc_ab_mb_refresh_token");
     store.dispatch(
       logout()
+    );
+    store.dispatch(
+      hideSidemenu()
     );
     console.log(error);
   }

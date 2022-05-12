@@ -22,6 +22,7 @@ const Layout = (props) => {
     }
   };
 
+
   return (
     <div className="layoutContainer">
       <div className="layoutHeader">

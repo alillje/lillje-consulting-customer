@@ -19,14 +19,13 @@ import AddBoxSharpIcon from "@mui/icons-material/AddBoxSharp";
 import ViewListSharpIcon from "@mui/icons-material/ViewListSharp";
 import LogoutSharpIcon from "@mui/icons-material/LogoutSharp";
 import ManageSearchSharpIcon from "@mui/icons-material/ManageSearchSharp";
-import KeyboardDoubleArrowRightSharpIcon from '@mui/icons-material/KeyboardDoubleArrowRightSharp';
-import PeopleOutlineSharpIcon from '@mui/icons-material/PeopleOutlineSharp';
+import KeyboardDoubleArrowRightSharpIcon from "@mui/icons-material/KeyboardDoubleArrowRightSharp";
+import PeopleOutlineSharpIcon from "@mui/icons-material/PeopleOutlineSharp";
 import { useSelector, useDispatch } from "react-redux";
-import { showSidemenu, hideSidemenu } from "../../redux/reducers/sidemenu";
+import { hideSidemenu } from "../../redux/reducers/sidemenu";
 
 import { logoutHandler } from "../../services/logout-service";
-import { useEffect } from "react"
-
+import { useEffect } from "react";
 
 /**
  * Component
@@ -34,8 +33,9 @@ import { useEffect } from "react"
  * @param {*} props
  * @return {*}
  */
-const Sidebar = ({ width=undefined }) => {
+const Sidebar = ({ width = undefined }) => {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
     logoutHandler(user);
@@ -47,6 +47,9 @@ const Sidebar = ({ width=undefined }) => {
     setOpen(!open);
   };
 
+  const setSidebarVisibility = () => {
+    dispatch(hideSidemenu());
+  };
 
   const drawerWidth = width ? width : 250;
   return (
@@ -64,7 +67,12 @@ const Sidebar = ({ width=undefined }) => {
       <Box sx={{ overflow: "auto" }}>
         <Toolbar />
         <List>
-          <ListItem button component={Link} to="/transactions/register">
+          <ListItem
+            button
+            onClick={setSidebarVisibility}
+            component={Link}
+            to="/transactions/register"
+          >
             <ListItemIcon>
               <AddBoxSharpIcon />
             </ListItemIcon>
@@ -82,86 +90,97 @@ const Sidebar = ({ width=undefined }) => {
             <List component="div" disablePadding>
               <ListItem
                 button
+                onClick={setSidebarVisibility}
                 component={Link}
                 to="/transactions"
                 sx={{ pl: 4 }}
               >
                 <ListItemIcon>
-                <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
+                  <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
                 </ListItemIcon>
                 <ListItemText primary="Alla transaktioner" />
               </ListItem>
               <ListItem
                 button
+                onClick={setSidebarVisibility}
                 component={Link}
                 to="/transactions/done"
                 sx={{ pl: 4 }}
               >
                 <ListItemIcon>
-                <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
-
+                  <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
                 </ListItemIcon>
                 <ListItemText primary="Hanterade transaktioner" />
               </ListItem>
               <ListItem
                 button
+                onClick={setSidebarVisibility}
                 component={Link}
                 to="/transactions/open"
                 sx={{ pl: 4 }}
               >
                 <ListItemIcon>
-                <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
-
+                  <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
                 </ListItemIcon>
                 <ListItemText primary="Ohanterade transaktioner" />
               </ListItem>
               <ListItem
                 button
+                onClick={setSidebarVisibility}
                 component={Link}
                 to="/transactions/leverantorsfakturor"
                 sx={{ pl: 4 }}
               >
                 <ListItemIcon>
-                <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
-
+                  <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
                 </ListItemIcon>
                 <ListItemText primary="Leverantörsfakturor" />
               </ListItem>
               <ListItem
                 button
+                onClick={setSidebarVisibility}
                 component={Link}
                 to="/transactions/kundfakturor"
                 sx={{ pl: 4 }}
               >
                 <ListItemIcon>
-                <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
-
+                  <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
                 </ListItemIcon>
                 <ListItemText primary="Kundfakturor" />
               </ListItem>
               <ListItem
                 button
+                onClick={setSidebarVisibility}
                 component={Link}
                 to="/transactions/utlagg"
                 sx={{ pl: 4 }}
               >
                 <ListItemIcon>
-                <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
-
+                  <KeyboardDoubleArrowRightSharpIcon fontSize="xs" />
                 </ListItemIcon>
                 <ListItemText primary="Utlägg" />
               </ListItem>
             </List>
           </Collapse>
 
-          <ListItem button component={Link} to="/transactions/search">
+          <ListItem
+            button
+            onClick={setSidebarVisibility}
+            component={Link}
+            to="/transactions/search"
+          >
             <ListItemIcon>
               <ManageSearchSharpIcon />
             </ListItemIcon>
             <ListItemText primary="Hitta transaktion" />
           </ListItem>
           <Divider />
-          <ListItem button component={Link} to="/mina-uppgifter">
+          <ListItem
+            button
+            onClick={setSidebarVisibility}
+            component={Link}
+            to="/mina-uppgifter"
+          >
             <ListItemIcon>
               <PeopleOutlineSharpIcon />
             </ListItemIcon>

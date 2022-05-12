@@ -1,6 +1,12 @@
+/**
+ * The starting point of the application.
+ *
+ * @author Andreas Lillje
+ * @version 2.0.0
+ */
+
+
 import "./App.css";
-
-
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./utils/protected-route";
 import AdminRoute from "./utils/admin-route";
@@ -25,7 +31,6 @@ import AdminCustomers from "./pages/admin-customers/admin-customers";
 import AdminCustomer from "./pages/admin-customer/admin-customer";
 import RegisterCustomer from "./pages/register-customer/register-customer";
 
-import AdminCustomerTransaction from "./pages/admin-customer-transaction/admin-customer-transaction";
 
 // Error
 import Error from "./pages/error/error";

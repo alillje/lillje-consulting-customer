@@ -10,9 +10,9 @@ import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Collapse from "@mui/material/Collapse";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
+// import Collapse from "@mui/material/Collapse";
+// import ExpandLess from "@mui/icons-material/ExpandLess";
+// import ExpandMore from "@mui/icons-material/ExpandMore";
 
 // Icons
 import PeopleSharpIcon from "@mui/icons-material/PeopleSharp";
@@ -22,8 +22,10 @@ import FindInPageSharpIcon from "@mui/icons-material/FindInPageSharp";
 import PeopleOutlineSharpIcon from "@mui/icons-material/PeopleOutlineSharp";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import LogoutSharpIcon from "@mui/icons-material/LogoutSharp";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { logoutHandler } from "../../services/logout-service";
+import { hideSidemenu } from "../../redux/reducers/sidemenu";
+
 
 /**
  * Component
@@ -33,6 +35,8 @@ import { logoutHandler } from "../../services/logout-service";
  */
 const AdminSidebar = ({ width = undefined }) => {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
 
   const handleLogout = () => {
     logoutHandler(user);
@@ -40,8 +44,8 @@ const AdminSidebar = ({ width = undefined }) => {
 
   const [open, setOpen] = useState(false);
 
-  const handleClick = () => {
-    setOpen(!open);
+  const setSidebarVisibility = () => {
+    dispatch(hideSidemenu())
   };
 
   const drawerWidth = width ? width : 250;
@@ -60,35 +64,35 @@ const AdminSidebar = ({ width = undefined }) => {
       <Box sx={{ overflow: "auto" }}>
         <Toolbar />
         <List>
-          <ListItem button component={Link} to="/admin/transactions">
+          <ListItem button onClick={setSidebarVisibility} component={Link} to="/admin/transactions">
             <ListItemIcon>
               <ArticleSharpIcon />
             </ListItemIcon>
             <ListItemText primary="Transaktioner" />
           </ListItem>
 
-          <ListItem button component={Link} to="/admin/customers">
+          <ListItem button onClick={setSidebarVisibility} component={Link} to="/admin/customers">
             <ListItemIcon>
               <PeopleSharpIcon />
             </ListItemIcon>
             <ListItemText primary="Kunder" />
           </ListItem>
 
-          <ListItem button component={Link} to="/admin/customers/">
+          <ListItem button onClick={setSidebarVisibility} component={Link} to="/admin/customers/">
             <ListItemIcon>
               <PersonSearchSharpIcon />
             </ListItemIcon>
             <ListItemText primary="Hitta kund" />
           </ListItem>
 
-          <ListItem button component={Link} to="/admin/transactions/search">
+          <ListItem button onClick={setSidebarVisibility} component={Link} to="/admin/transactions/search">
             <ListItemIcon>
               <FindInPageSharpIcon />
             </ListItemIcon>
             <ListItemText primary="Hitta transaktion" />
           </ListItem>
 
-          <ListItem button component={Link} to="/admin/customers/register">
+          <ListItem button onClick={setSidebarVisibility} component={Link} to="/admin/customers/register">
             <ListItemIcon>
               <GroupAddIcon />
             </ListItemIcon>
@@ -97,7 +101,7 @@ const AdminSidebar = ({ width = undefined }) => {
 
           <Divider />
 
-          <ListItem button component={Link} to="/admin/mina-uppgifter">
+          <ListItem button onClick={setSidebarVisibility} component={Link} to="/admin/mina-uppgifter">
             <ListItemIcon>
               <PeopleOutlineSharpIcon />
             </ListItemIcon>

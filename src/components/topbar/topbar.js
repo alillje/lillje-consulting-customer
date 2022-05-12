@@ -10,7 +10,7 @@ import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircleSharpIcon from "@mui/icons-material/AccountCircleSharp";
 
-import "./topbar.css"
+import "./topbar.css";
 import { useSelector, useDispatch } from "react-redux";
 import { showSidemenu, hideSidemenu } from "../../redux/reducers/sidemenu";
 
@@ -28,14 +28,10 @@ const TopBar = () => {
 
   const handleOpenNavMenu = (event) => {
     if (sidemenu.show) {
-      dispatch(hideSidemenu())
+      dispatch(hideSidemenu());
     } else {
-      dispatch(showSidemenu())
+      dispatch(showSidemenu());
     }
-    // setAnchorElNav(event.currentTarget);
-    // console.log(showSideMenu)
-    console.log(sidemenu)
-
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -43,10 +39,6 @@ const TopBar = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-    console.log('navmenu')
-    // console.log(showSideMenu)
-
-
   };
 
   const handleCloseUserMenu = () => {
@@ -55,6 +47,10 @@ const TopBar = () => {
 
   const handleLogout = () => {
     logoutHandler(user);
+  };
+
+  const setSidebarVisibility = () => {
+    dispatch(hideSidemenu());
   };
 
   return (
@@ -69,6 +65,7 @@ const TopBar = () => {
       <Container maxWidth="100%">
         <Toolbar disableGutters>
           <Typography
+            onClick={setSidebarVisibility}
             component={Link}
             to="/dashboard"
             variant="h6"
@@ -107,12 +104,11 @@ const TopBar = () => {
               sx={{
                 display: { xs: "block", md: "none" },
               }}
-            >
-
-            </Menu>
+            ></Menu>
           </Box>
           <Typography
             component={Link}
+            onClick={setSidebarVisibility}
             to="/dashboard"
             variant="h6"
             noWrap
@@ -121,42 +117,41 @@ const TopBar = () => {
           >
             LILLJE CONSULTING
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
- 
-          </Box>
-          {user.auth &&
-
-          <Box sx={{ flexGrow: 0 }}>
-                 {user.auth && <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-Inloggad som: {user.admin ? 'Administratör' : user.user.company}
- </Box>}
-            <AccountCircleSharpIcon
-              onClick={handleOpenUserMenu}
-              sx={{ p: 0 }}
-            ></AccountCircleSharpIcon>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              <MenuItem key="logout" onClick={handleLogout}>
-                <Typography textAlign="center">Logout</Typography>
-              </MenuItem>
-
-            </Menu>
-          </Box>
-          }
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
+          {user.auth && (
+            <Box sx={{ flexGrow: 0 }}>
+              {user.auth && (
+                <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+                  Inloggad som:{" "}
+                  {user.admin ? "Administratör" : user.user.company}
+                </Box>
+              )}
+              <AccountCircleSharpIcon
+                onClick={handleOpenUserMenu}
+                sx={{ p: 0 }}
+              ></AccountCircleSharpIcon>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem key="logout" onClick={handleLogout}>
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

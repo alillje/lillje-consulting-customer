@@ -49,8 +49,7 @@ const CustomersList = () => {
 
   const getCustomers = async () => {
     let apiUrl = `${process.env.REACT_APP_AUTH_API}/users?page=${page}&limit=${limit}`;
-    console.log(apiUrl);
-    console.log(page)
+
     try {
       setLoading(true);
       const { data } = await axiosApiInstance.get(

@@ -55,7 +55,6 @@ const TransactionForm = () => {
     let fileUrl = "";
     // Validate file type and upload file
     if (file) {
-      console.log(file.type === "application/pdf");
       if (
         file.type === "application/pdf" ||
         file.type === "image/png" ||
@@ -70,13 +69,11 @@ const TransactionForm = () => {
           "upload_preset",
           process.env.REACT_APP_CLOUDINARY_PRESET
         );
-        console.log(file.type);
         const dataRes = await axios.post(
           process.env.REACT_APP_CLOUDINARY_UPLOAD,
           formData
         );
         fileUrl = dataRes.data.url;
-        console.log(fileUrl);
       }
     }
 

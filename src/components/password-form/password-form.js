@@ -61,7 +61,6 @@ const PasswordForm = () => {
       newPassword: newPassword,
       newPasswordConfirm: newPasswordConfirm
     };
-    console.log(reqBody)
 
     let reqHeaders = {
       headers: {
