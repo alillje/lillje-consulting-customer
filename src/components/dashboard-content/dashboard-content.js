@@ -53,7 +53,7 @@ const DashboardContent = () => {
         </Link>
       </div>
       <div className="div3">
-        <Link to="/admin/customers/search">
+        <Link to="/admin/customers">
           <CardContent>
             <Typography
               gutterBottom

@@ -74,7 +74,7 @@ const AdminSidebar = ({ width = undefined }) => {
             <ListItemText primary="Kunder" />
           </ListItem>
 
-          <ListItem button component={Link} to="/admin/customers/search">
+          <ListItem button component={Link} to="/admin/customers/">
             <ListItemIcon>
               <PersonSearchSharpIcon />
             </ListItemIcon>

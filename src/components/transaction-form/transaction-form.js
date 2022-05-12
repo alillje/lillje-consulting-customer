@@ -31,6 +31,7 @@ const TransactionForm = () => {
   const [transactionType, setTransactionType] = useState("");
   const [viewCategories, setViewCategories] = useState(true);
   const [file, setFile] = useState();
+  const [validFileFormat, setValidFileFormat] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -45,36 +46,53 @@ const TransactionForm = () => {
     "Mobil",
     "Internet",
     "Försäkring",
-    "Övrigt"
-    ];
-
+    "Övrigt",
+  ];
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    let fileUrl = ""
+    setLoading(true);
+    let fileUrl = "";
+    // Validate file type and upload file
     if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET);
-      const dataRes = await axios.post(
-        process.env.REACT_APP_CLOUDINARY_UPLOAD,
-        formData
-      );
-      fileUrl = dataRes.data.url;
+      console.log(file.type === "application/pdf");
+      if (
+        file.type === "application/pdf" ||
+        file.type === "image/png" ||
+        file.type === "image/jpg" ||
+        file.type === "image/jpeg"
+      ) {
+        setValidFileFormat(true);
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append(
+          "upload_preset",
+          process.env.REACT_APP_CLOUDINARY_PRESET
+        );
+        console.log(file.type);
+        const dataRes = await axios.post(
+          process.env.REACT_APP_CLOUDINARY_UPLOAD,
+          formData
+        );
+        fileUrl = dataRes.data.url;
+        console.log(fileUrl);
+      }
     }
-
-
 
     const reqBody = {
       description: validator.escape(description),
       authorName: user.company,
       company: validator.escape(company),
       transactionType: validator.escape(transactionType),
-      transactionCategory: transactionType !== "Leverantörsfaktura" ? validator.escape(transactionCategory) : "Försäljning",
+      transactionCategory:
+        transactionType !== "Leverantörsfaktura"
+          ? validator.escape(transactionCategory)
+          : "Försäljning",
       amount: validator.escape(amount),
       author: validator.escape(user.user.sub),
       date: new Date(date).getTime() / 1000,
-      documentUrl: fileUrl
+      documentUrl: fileUrl,
     };
     let reqHeaders = {
       headers: {
@@ -82,9 +100,8 @@ const TransactionForm = () => {
       },
     };
 
-    if (minParams) {
+    if (minParams && validFileFormat) {
       try {
-        setLoading(true);
         const { data } = await axiosApiInstance.post(
           `${process.env.REACT_APP_RESOURCE_API}/resources`,
           reqBody,
@@ -97,18 +114,25 @@ const TransactionForm = () => {
             sub: user.user.sub,
           })
         );
-        navigate(`/transactions/${data.id}`, { state: {message: "Transaktionen har registrerats"} });
+        navigate(`/transactions/${data.id}`, {
+          state: { message: "Transaktionen har registrerats" },
+        });
       } catch (error) {
         console.log(error);
         console.log("Error in transaction/register");
         setLoading(false);
         setErrorMessage("Ett oväntat fel inträffade");
       }
+    } else if (!validFileFormat) {
+      setErrorMessage("Tillåtna filformat är .pdf, .jpg, .jpeg, .png");
+      setLoading(false);
     } else {
       setErrorMessage(
         "Alla fält måste fyllas i för att kunna registrera en ny transaktion"
       );
+      setLoading(false);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -128,18 +152,27 @@ const TransactionForm = () => {
     } else {
       setMinParams(false);
     }
-  }, [minParams, company, date, amount, description, transactionType, viewCategories]);
+  }, [
+    minParams,
+    company,
+    date,
+    amount,
+    description,
+    transactionType,
+    viewCategories,
+    validFileFormat,
+  ]);
 
   return loading ? (
     <CircularProgress />
   ) : (
     <div>
-              {errorMessage && (
-          <Alert severity="info" className="searchErrorMessage">
-            <AlertTitle>Ett fel inträffade</AlertTitle>
-            {errorMessage}
-          </Alert>
-        )}
+      {errorMessage && (
+        <Alert severity="info" className="searchErrorMessage">
+          <AlertTitle>Ett fel inträffade</AlertTitle>
+          {errorMessage}
+        </Alert>
+      )}
       <div className="trasactionFormHeader">
         <h5> Registrera ny transaktion</h5>
       </div>
@@ -152,8 +185,7 @@ const TransactionForm = () => {
         autoComplete="off"
         onSubmit={handleSubmit}
       >
-
-<TextField
+        <TextField
           value={transactionType}
           onChange={(event) => setTransactionType(event.target.value)}
           select // tell TextField to render select
@@ -179,11 +211,10 @@ const TransactionForm = () => {
                 <MenuItem key={category} value={category}>
                   {category}
                 </MenuItem>
-              ) 
+              );
             })}
           </TextField>
         )}
-
 
         <TextField
           id="outlined-basic"
@@ -222,15 +253,15 @@ const TransactionForm = () => {
             shrink: true,
           }}
         />
-                  <TextField
-                  type="file"
-                    className="position-relative mt-2"
-                    name="file"
-                    accept="image/png, image.jpg, application/pdf"
-                    onChange={(e) => setFile(e.target.files[0])}
-                    id="validationFormik107"
-                    feedbackTooltip
-                  />
+        <TextField
+          type="file"
+          className="position-relative mt-2"
+          name="file"
+          accept="image/png, image.jpg, application/pdf"
+          onChange={(e) => setFile(e.target.files[0])}
+          id="validationFormik107"
+          feedbackTooltip
+        />
 
         <Button type="submit">Registrera transaktion</Button>
       </Box>
