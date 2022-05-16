@@ -8,12 +8,10 @@ import axiosApiInstance from "../../services/axios-interceptor";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import { setTransaction } from "../../redux/reducers/transaction";
-
 import { useSelector, useDispatch } from "react-redux";
 import Accordion from "react-bootstrap/Accordion";
 import dayjs from "dayjs";
 import validator from "validator";
-
 // Alert
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -21,8 +19,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 // TODO: Validate input
-
-const SearchForm = () => {
+export default function SearchForm () {
   const user = useSelector((state) => state.user);
   const stateCustomer = useSelector((state) => state.customer);
 
@@ -305,5 +302,3 @@ const SearchForm = () => {
     );
   }
 };
-
-export default SearchForm;

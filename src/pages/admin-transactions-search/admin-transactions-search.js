@@ -7,7 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import axiosApiInstance from "../../services/axios-interceptor";
 import { setStateCustomer } from "../../redux/reducers/customer";
 
-import SearchForm from "../../components/search-form/search-form"
+import SearchForm from "../../components/search-form/search-form";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
