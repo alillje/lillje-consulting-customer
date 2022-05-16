@@ -21,7 +21,13 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
-// TODO: Valitation of input
+// TODO: Validate input
+/**
+ * A search form component. Represents a search form with input fields.
+ * Presents results if any. 
+ * 
+ * @return {JSX} 
+ */
 const SearchForm = () => {
   const user = useSelector((state) => state.user);
   const stateCustomer = useSelector((state) => state.customer);
@@ -68,8 +74,9 @@ const SearchForm = () => {
       url = `${apiUrl}?invoiceDate=${new Date(dateSanitized).getTime() / 1000}`;
     } else if (transactionType.length > 0) {
       url = `${apiUrl}?transactionType=${transactionTypeSanitized}`;
-    } if (user.admin) {
-      url = `${url}&author=${stateCustomer.id}`
+    }
+    if (user.admin) {
+      url = `${url}&author=${stateCustomer.id}`;
     }
 
     return url;
@@ -88,7 +95,7 @@ const SearchForm = () => {
       apiUrl = `${url}&limit=10`;
       setMinParams(true);
     }
-    console.log(url)
+    console.log(url);
     if (minParams) {
       let reqHeaders = {
         headers: {
@@ -116,22 +123,26 @@ const SearchForm = () => {
 
   const goToTransaction = (event) => {
     event.preventDefault();
-    console.log(stateCustomer)
+    console.log(stateCustomer);
     if (!user.admin) {
-    dispatch(
-      setTransaction({
-        id: event.target.getAttribute("data"),
-        sub: user.user.sub,
-      })
-    );} else {
+      dispatch(
+        setTransaction({
+          id: event.target.getAttribute("data"),
+          sub: user.user.sub,
+        })
+      );
+    } else {
       dispatch(
         setTransaction({
           id: event.target.getAttribute("data"),
           sub: stateCustomer.id,
-        }))
+        })
+      );
     }
-    console.log(user.admin)
-    user.admin ? navigate(`/admin/transactions/${event.target.getAttribute("data")}`) : navigate(`/transactions/${event.target.getAttribute("data")}`);
+    console.log(user.admin);
+    user.admin
+      ? navigate(`/admin/transactions/${event.target.getAttribute("data")}`)
+      : navigate(`/transactions/${event.target.getAttribute("data")}`);
   };
 
   const newSearch = () => {
@@ -168,8 +179,9 @@ const SearchForm = () => {
     }
     if (date.length > 0) {
       setMinParams(true);
-    } if(transactionType.length > 0) {
-      setMinParams(true)
+    }
+    if (transactionType.length > 0) {
+      setMinParams(true);
     }
   }, [minParams, company, date, page, transactionType]);
 
@@ -191,7 +203,10 @@ const SearchForm = () => {
             transactions.map((transaction) => {
               return (
                 <Accordion key={transaction.id}>
-                  <Accordion.Item eventKey={transaction.id} data={transaction.author}>
+                  <Accordion.Item
+                    eventKey={transaction.id}
+                    data={transaction.author}
+                  >
                     <Accordion.Header>
                       {transaction?.company} -{" "}
                       {dayjs
@@ -229,9 +244,9 @@ const SearchForm = () => {
           </Stack>
         </div>
         <div className="newSearch">
-        <Button variant="text" onClick={newSearch} sx={{ color: "#000000" }}>
-          &#171; Ny sökning
-        </Button>
+          <Button variant="text" onClick={newSearch} sx={{ color: "#000000" }}>
+            &#171; Ny sökning
+          </Button>
         </div>
       </div>
     );
