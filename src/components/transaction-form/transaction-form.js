@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import "./transaction-form.css";
 import axiosApiInstance from "../../services/axios-interceptor";
 import axios from "axios";
-
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import { setTransaction } from "../../redux/reducers/transaction";
@@ -18,6 +17,7 @@ import validator from "validator";
 // Alert
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import { FormControlUnstyledContext } from "@mui/base";
 
 // TODO: Valitation of input
 const TransactionForm = () => {
@@ -31,7 +31,6 @@ const TransactionForm = () => {
   const [transactionType, setTransactionType] = useState("");
   const [viewCategories, setViewCategories] = useState(true);
   const [file, setFile] = useState();
-  const [validFileFormat, setValidFileFormat] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -53,7 +52,12 @@ const TransactionForm = () => {
     event.preventDefault();
     setLoading(true);
     let fileUrl = "";
-    // Validate file type and upload file
+    let validFileFormat = false;
+
+    console.log(file)
+  
+    // Validate file type and upload file 
+    try {
     if (file) {
       if (
         file.type === "application/pdf" ||
@@ -61,7 +65,7 @@ const TransactionForm = () => {
         file.type === "image/jpg" ||
         file.type === "image/jpeg"
       ) {
-        setValidFileFormat(true);
+        validFileFormat = true;
 
         const formData = new FormData();
         formData.append("file", file);
@@ -74,7 +78,11 @@ const TransactionForm = () => {
           formData
         );
         fileUrl = dataRes.data.url;
+          console.log(fileUrl);
       }
+    } } catch (error) {
+      console.log(error)
+      setErrorMessage("Ett oväntat fel inträffade");
     }
 
     const reqBody = {
@@ -156,8 +164,7 @@ const TransactionForm = () => {
     amount,
     description,
     transactionType,
-    viewCategories,
-    validFileFormat,
+    viewCategories
   ]);
 
   return loading ? (

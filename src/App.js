@@ -30,6 +30,7 @@ import AdminTransactions from "./pages/admin-transactions/admin-transactions";
 import AdminCustomers from "./pages/admin-customers/admin-customers";
 import AdminCustomer from "./pages/admin-customer/admin-customer";
 import RegisterCustomer from "./pages/register-customer/register-customer";
+import AdminTransactionsSearch from "./pages/admin-transactions-search/admin-transactions-search";
 
 
 // Error
@@ -173,7 +174,7 @@ function App() {
               <Route
                 exact
                 path="/admin/transactions/search"
-                element={<Layout children={<TransactionsSearch />} />}
+                element={<Layout children={<AdminTransactionsSearch />} />}
               />
             </Route>
 

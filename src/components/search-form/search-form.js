@@ -24,6 +24,8 @@ import Stack from "@mui/material/Stack";
 // TODO: Valitation of input
 const SearchForm = () => {
   const user = useSelector((state) => state.user);
+  const stateCustomer = useSelector((state) => state.customer);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [transactions, setTransactions] = useState([]);
   const [company, setCompany] = useState("");
@@ -67,7 +69,10 @@ const SearchForm = () => {
       url = `${apiUrl}?invoiceDate=${new Date(dateSanitized).getTime() / 1000}`;
     } else if (transactionType.length > 0) {
       url = `${apiUrl}?transactionType=${transactionTypeSanitized}`;
+    } if (user.admin) {
+      url = `${url}&author=${stateCustomer.id}`
     }
+
     return url;
   };
 
@@ -84,7 +89,7 @@ const SearchForm = () => {
       apiUrl = `${url}&limit=10`;
       setMinParams(true);
     }
-
+    console.log(url)
     if (minParams) {
       let reqHeaders = {
         headers: {
@@ -112,13 +117,22 @@ const SearchForm = () => {
 
   const goToTransaction = (event) => {
     event.preventDefault();
+    console.log(stateCustomer)
+    if (!user.admin) {
     dispatch(
       setTransaction({
         id: event.target.getAttribute("data"),
         sub: user.user.sub,
       })
-    );
-    navigate(`/transactions/${event.target.getAttribute("data")}`);
+    );} else {
+      dispatch(
+        setTransaction({
+          id: event.target.getAttribute("data"),
+          sub: stateCustomer.id,
+        }))
+    }
+    console.log(user.admin)
+    user.admin ? navigate(`/admin/transactions/${event.target.getAttribute("data")}`) : navigate(`/transactions/${event.target.getAttribute("data")}`);
   };
 
   const newSearch = () => {

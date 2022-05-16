@@ -50,9 +50,9 @@
 .searchNoResults {
     grid-area: 4 / 1 / 6 / 4;
     text-align: center;
-    font-size: 2rem;
+    font-size: 20px;
     color: #9a5e5e;
-    letter-spacing: 3px;
+    letter-spacing: 1px;
 }
 
 .searchErrorMessage {
