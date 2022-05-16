@@ -1,6 +1,5 @@
 import "./admin-transactions-search.css";
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -11,7 +10,6 @@ import { setStateCustomer } from "../../redux/reducers/customer";
 import SearchForm from "../../components/search-form/search-form"
 
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { logout } from "../../redux/reducers/user";
@@ -27,11 +25,9 @@ const AdminTransactionsSearch = () => {
     const [customerSelected, setCustomerSelected] = useState(false)
     const [customers, setCustomers] = useState([]);
     const [customer, setCustomer] = useState({});
-    const [companyName, setCompanyName] = useState("");
     // const transaction = useSelector((state) => state.transaction);
     const dispatch = useDispatch();
   
-    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
   
   

@@ -25,7 +25,6 @@ import axiosApiInstance from "../../services/axios-interceptor";
 
 const CustomersList = () => {
   const user = useSelector((state) => state.user);
-  const stateCustomer = useSelector((state) => state.customer);
 
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(false);

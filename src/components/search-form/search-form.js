@@ -8,7 +8,7 @@ import "./search-form.css";
 import axiosApiInstance from "../../services/axios-interceptor";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
-import transaction, { setTransaction } from "../../redux/reducers/transaction";
+import { setTransaction } from "../../redux/reducers/transaction";
 
 import { useSelector, useDispatch } from "react-redux";
 import Accordion from "react-bootstrap/Accordion";
@@ -43,7 +43,6 @@ const SearchForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  let i = 0;
   // Construct url from params
   const setUrl = (
     companySanitized,
