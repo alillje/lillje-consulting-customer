@@ -21,12 +21,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 // TODO: Validate input
-/**
- * A search form component. Represents a search form with input fields.
- * Presents results if any.
- *
- * @return {JSX}
- */
+
 const SearchForm = () => {
   const user = useSelector((state) => state.user);
   const stateCustomer = useSelector((state) => state.customer);
