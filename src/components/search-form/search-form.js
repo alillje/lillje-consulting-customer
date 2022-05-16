@@ -27,7 +27,7 @@ import Stack from "@mui/material/Stack";
  *
  * @return {JSX}
  */
-export default function SearchForm () {
+const SearchForm = () => {
   const user = useSelector((state) => state.user);
   const stateCustomer = useSelector((state) => state.customer);
 
@@ -310,4 +310,6 @@ export default function SearchForm () {
     );
   }
 
-};
+}
+
+export default SearchForm
