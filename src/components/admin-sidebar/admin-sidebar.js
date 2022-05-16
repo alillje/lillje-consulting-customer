@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./admin-sidebar.css";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -10,14 +9,10 @@ import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-// import Collapse from "@mui/material/Collapse";
-// import ExpandLess from "@mui/icons-material/ExpandLess";
-// import ExpandMore from "@mui/icons-material/ExpandMore";
 
 // Icons
 import PeopleSharpIcon from "@mui/icons-material/PeopleSharp";
 import ArticleSharpIcon from "@mui/icons-material/ArticleSharp";
-import PersonSearchSharpIcon from "@mui/icons-material/PersonSearchSharp";
 import FindInPageSharpIcon from "@mui/icons-material/FindInPageSharp";
 import PeopleOutlineSharpIcon from "@mui/icons-material/PeopleOutlineSharp";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
@@ -41,8 +36,6 @@ const AdminSidebar = ({ width = undefined }) => {
   const handleLogout = () => {
     logoutHandler(user);
   };
-
-  const [open, setOpen] = useState(false);
 
   const setSidebarVisibility = () => {
     dispatch(hideSidemenu())
@@ -76,13 +69,6 @@ const AdminSidebar = ({ width = undefined }) => {
               <PeopleSharpIcon />
             </ListItemIcon>
             <ListItemText primary="Kunder" />
-          </ListItem>
-
-          <ListItem button onClick={setSidebarVisibility} component={Link} to="/admin/customers/">
-            <ListItemIcon>
-              <PersonSearchSharpIcon />
-            </ListItemIcon>
-            <ListItemText primary="Hitta kund" />
           </ListItem>
 
           <ListItem button onClick={setSidebarVisibility} component={Link} to="/admin/transactions/search">

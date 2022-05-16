@@ -33,7 +33,28 @@ const DashboardContent = () => {
           </CardActions>
         </Link>
       </div>
+
       <div className="div2">
+        <Link to="/admin/transactions">
+          <CardContent>
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="div"
+              sx={{ color: "#ffffff" }}
+            >
+              Visa alla transaktioner
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button sx={{ color: "#ffffff" }} size="large">
+              Alla transaktioner &#187;
+            </Button>
+          </CardActions>
+        </Link>
+      </div>
+
+      <div className="div3">
         <Link to="/admin/transactions/search">
           <CardContent>
             <Typography
@@ -52,28 +73,9 @@ const DashboardContent = () => {
           </CardActions>
         </Link>
       </div>
-      <div className="div3">
-        <Link to="/admin/customers">
-          <CardContent>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="div"
-              sx={{ color: "#ffffff" }}
-            >
-              Sök efter kunder
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button sx={{ color: "#ffffff" }} size="large">
-              Hitta kunder &#187;
-            </Button>
-          </CardActions>
-        </Link>
-      </div>
 
       <div className="div4">
-        <Link to="/admin/mina-uppgifter/">
+        <Link to="/admin/customers/register">
           <CardContent>
             <Typography
               gutterBottom
@@ -81,12 +83,12 @@ const DashboardContent = () => {
               component="div"
               sx={{ color: "#ffffff" }}
             >
-              Mina uppgifter
+              Registrera ny kund
             </Typography>
           </CardContent>
           <CardActions>
             <Button sx={{ color: "#ffffff" }} size="large">
-              Mina uppgifter &#187;
+            Registrera ny kund &#187;
             </Button>
           </CardActions>
         </Link>

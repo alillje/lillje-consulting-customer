@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -24,9 +23,9 @@ import Stack from "@mui/material/Stack";
 // TODO: Validate input
 /**
  * A search form component. Represents a search form with input fields.
- * Presents results if any. 
- * 
- * @return {JSX} 
+ * Presents results if any.
+ *
+ * @return {JSX}
  */
 const SearchForm = () => {
   const user = useSelector((state) => state.user);
@@ -92,7 +91,7 @@ const SearchForm = () => {
     let url = setUrl(companySanitized, dateSanitized, transactionTypeSantized);
 
     if (url) {
-      apiUrl = `${url}&limit=10`;
+      apiUrl = `${url}&limit=${limit}`;
       setMinParams(true);
     }
     console.log(url);
@@ -310,6 +309,8 @@ const SearchForm = () => {
       </div>
     );
   }
+
 };
+
 
 export default SearchForm;
