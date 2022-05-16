@@ -83,7 +83,7 @@ const AdminTransactions = () => {
           <Box
             component="form"
             sx={{
-              "& > :not(style)": { m: 3, width: "90%" },
+              "& > :not(style)": { m: 3, width: "90%", minWidth: '300px' },
             }}
             noValidate
             autoComplete="off"
