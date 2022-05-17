@@ -18,6 +18,8 @@ import validator from "validator";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
+import { setVateRate, setVatRate } from "./helper-functions/calculate-vat"
+
 // TODO: Valitation of input
 const TransactionForm = () => {
   const user = useSelector((state) => state.user);
@@ -25,10 +27,12 @@ const TransactionForm = () => {
   const [description, setDescription] = useState("");
   const [company, setCompany] = useState("");
   const [date, setDate] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amountExVat, setAmountExVat] = useState("");
   const [transactionCategory, setTransactionCategory] = useState("");
   const [transactionType, setTransactionType] = useState("");
   const [viewCategories, setViewCategories] = useState(true);
+  const [vat, setVat] = useState("");
+
   const [file, setFile] = useState();
 
   const [loading, setLoading] = useState(false);
@@ -37,6 +41,7 @@ const TransactionForm = () => {
   const [minParams, setMinParams] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const vatRates = ["0%", "6%", "12%", "25%"]
   const transactionTypes = ["Leverantörsfaktura", "Kundfaktura", "Utlägg"];
   const transactionCategories = [
     "Bensin",
@@ -93,7 +98,8 @@ const TransactionForm = () => {
         transactionType !== "Leverantörsfaktura"
           ? validator.escape(transactionCategory)
           : "Försäljning",
-      amount: validator.escape(amount),
+      vat: setVatRate(vat),
+      amountExVat: validator.escape(amountExVat),
       author: validator.escape(user.user.sub),
       date: new Date(date).getTime() / 1000,
       documentUrl: fileUrl,
@@ -149,7 +155,7 @@ const TransactionForm = () => {
     if (
       company.length > 0 &&
       date.length > 0 &&
-      amount.length > 0 &&
+      amountExVat.length > 0 &&
       description.length > 0
     ) {
       setMinParams(true);
@@ -160,7 +166,7 @@ const TransactionForm = () => {
     minParams,
     company,
     date,
-    amount,
+    amountExVat,
     description,
     transactionType,
     viewCategories
@@ -236,13 +242,28 @@ const TransactionForm = () => {
           required
         />
         <TextField
-          value={amount}
-          onChange={(event) => setAmount(event.target.value)}
+          value={amountExVat}
+          onChange={(event) => setAmountExVat(event.target.value)}
           id="outlined-basic"
-          label="Belopp"
+          label="Belopp Exkl. Moms"
           variant="outlined"
           required
         />
+
+<TextField
+          value={vat}
+          onChange={(event) => setVat(event.target.value)}
+          select // tell TextField to render select
+          label="Momssats"
+        >
+          {vatRates.map((vatRate) => {
+            return (
+              <MenuItem key={vatRate} value={vatRate}>
+                {vatRate}
+              </MenuItem>
+            );
+          })}
+        </TextField>
 
         <TextField
           onChange={(event) => setDate(event.target.value)}
