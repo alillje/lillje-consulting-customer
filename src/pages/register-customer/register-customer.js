@@ -1,20 +1,15 @@
-import "./register-customer.css";
-import RegisterForm from "../../components/register-form/register-form"
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import axiosApiInstance from "../../services/axios-interceptor";
+import './register-customer.css'
+import * as React from 'react'
+import RegisterForm from '../../components/register-form/register-form'
 
-import TransactionForm from "../../components/transaction-form/transaction-form";
-
-
+/**
+ * Register Customer Component.
+ * Represents the customer registration page.
+ *
+ * @returns {React.ReactElement} - Register Customer Component.
+ */
 const RegisterCustomer = () => {
+  return <RegisterForm />
+}
 
-
-  return (
-
-    <RegisterForm />
-
-  );
-};
-
-export default RegisterCustomer;
+export default RegisterCustomer

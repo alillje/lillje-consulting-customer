@@ -1,22 +1,15 @@
-import "./dashboard.css";
+import './dashboard.css'
+import * as React from 'react'
+import DashboardContent from '../../components/dashboard-content/dashboard-content'
 
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-
-import DashboardContent from "../../components/dashboard-content/dashboard-content"
-
-
-
+/**
+ * Dashboard Component.
+ * Represents the page for the dashboard.
+ *
+ * @returns {React.ReactElement} - Dashboard Component.
+ */
 const Dashboard = () => {
-  return (
-<DashboardContent />
-  );
+  return <DashboardContent />
 }
-;
 
-export default Dashboard;
+export default Dashboard

@@ -1,19 +1,25 @@
-import "./dashboard-content.css";
+import './dashboard-content.css'
+import * as React from 'react'
 
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
+// Material UI Components
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-
+/**
+ * Dashboard Content Component.
+ * Displays content and buttons in dashboard, depending on the user permisson level.
+ *
+ * @returns {React.ReactElement} - Dashboard Content Component.
+ */
 const DashboardContent = () => {
-  const admin = useSelector((state) => state.user.admin);
+  const admin = useSelector((state) => state.user.admin)
 
   return admin ? (
     <div className="dashboardContainer">
-
       <div className="div1">
         <Link to="/admin/customers">
           <CardContent>
@@ -21,13 +27,13 @@ const DashboardContent = () => {
               gutterBottom
               variant="h5"
               component="div"
-              sx={{ color: "#ffffff" }}
+              sx={{ color: '#ffffff' }}
             >
               Visa alla kunder
             </Typography>
           </CardContent>
           <CardActions>
-            <Button sx={{ color: "#ffffff" }} size="large">
+            <Button sx={{ color: '#ffffff' }} size="large">
               Alla kunder &#187;
             </Button>
           </CardActions>
@@ -41,13 +47,13 @@ const DashboardContent = () => {
               gutterBottom
               variant="h5"
               component="div"
-              sx={{ color: "#ffffff" }}
+              sx={{ color: '#ffffff' }}
             >
               Visa alla transaktioner
             </Typography>
           </CardContent>
           <CardActions>
-            <Button sx={{ color: "#ffffff" }} size="large">
+            <Button sx={{ color: '#ffffff' }} size="large">
               Alla transaktioner &#187;
             </Button>
           </CardActions>
@@ -61,13 +67,13 @@ const DashboardContent = () => {
               gutterBottom
               variant="h5"
               component="div"
-              sx={{ color: "#ffffff" }}
+              sx={{ color: '#ffffff' }}
             >
               Sök efter transaktion
             </Typography>
           </CardContent>
           <CardActions>
-            <Button sx={{ color: "#ffffff" }} size="large">
+            <Button sx={{ color: '#ffffff' }} size="large">
               Hitta transaktion &#187;
             </Button>
           </CardActions>
@@ -81,14 +87,14 @@ const DashboardContent = () => {
               gutterBottom
               variant="h5"
               component="div"
-              sx={{ color: "#ffffff" }}
+              sx={{ color: '#ffffff' }}
             >
               Registrera ny kund
             </Typography>
           </CardContent>
           <CardActions>
-            <Button sx={{ color: "#ffffff" }} size="large">
-            Registrera ny kund &#187;
+            <Button sx={{ color: '#ffffff' }} size="large">
+              Registrera ny kund &#187;
             </Button>
           </CardActions>
         </Link>
@@ -103,13 +109,13 @@ const DashboardContent = () => {
               gutterBottom
               variant="h5"
               component="div"
-              sx={{ color: "#ffffff" }}
+              sx={{ color: '#ffffff' }}
             >
               Registrera transaktion
             </Typography>
           </CardContent>
           <CardActions>
-            <Button sx={{ color: "#ffffff" }} size="large">
+            <Button sx={{ color: '#ffffff' }} size="large">
               Ny transaktion &#187;
             </Button>
           </CardActions>
@@ -122,13 +128,13 @@ const DashboardContent = () => {
               gutterBottom
               variant="h5"
               component="div"
-              sx={{ color: "#ffffff" }}
+              sx={{ color: '#ffffff' }}
             >
               Visa alla transaktioner
             </Typography>
           </CardContent>
           <CardActions>
-            <Button sx={{ color: "#ffffff" }} size="large">
+            <Button sx={{ color: '#ffffff' }} size="large">
               Alla transaktioner &#187;
             </Button>
           </CardActions>
@@ -141,13 +147,13 @@ const DashboardContent = () => {
               gutterBottom
               variant="h5"
               component="div"
-              sx={{ color: "#ffffff" }}
+              sx={{ color: '#ffffff' }}
             >
               Sök efter transaktion
             </Typography>
           </CardContent>
           <CardActions>
-            <Button sx={{ color: "#ffffff" }} size="large">
+            <Button sx={{ color: '#ffffff' }} size="large">
               Hitta transaktion &#187;
             </Button>
           </CardActions>
@@ -160,19 +166,19 @@ const DashboardContent = () => {
               gutterBottom
               variant="h5"
               component="div"
-              sx={{ color: "#ffffff" }}
+              sx={{ color: '#ffffff' }}
             >
               Mina uppgifter
             </Typography>
           </CardContent>
           <CardActions>
-            <Button sx={{ color: "#ffffff" }} size="large">
+            <Button sx={{ color: '#ffffff' }} size="large">
               Mina uppgifter &#187;
             </Button>
           </CardActions>
         </Link>
       </div>
     </div>
-  );
-};
-export default DashboardContent;
+  )
+}
+export default DashboardContent

@@ -1,87 +1,140 @@
-import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import "./customer-card.css";
+import './customer-card.css'
+import * as React from 'react'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import axiosApiInstance from '../../services/axios-interceptor'
 
-import { Link, useNavigate } from "react-router-dom";
+// Material UI components
+import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 
-import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../redux/reducers/user";
-import { setCustomer } from "../../redux/reducers/customer";
-
-import { useEffect, useState } from "react";
-import axiosApiInstance from "../../services/axios-interceptor";
-
+/**
+ * Customer Card Component.
+ * Displays information about a specific customer.
+ * Also displays buttons with certain options.
+ *
+ * @returns {React.ReactElement} - Customer Card Component.
+ */
 const CustomerCard = () => {
-  const user = useSelector((state) => state.user);
-  const admin = useSelector((state) => state.user.admin);
+  const user = useSelector((state) => state.user)
+  const [customer, setCustomer] = useState({})
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  const [customer, setCustomer] = useState({});
-  const [loading, setLoading] = useState(false);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  let config = {
-    headers: {
-      Authorization: "Bearer " + user.accessToken,
-    },
-  };
-
+  /**
+   * Makes request to API and get a specific customer.
+   */
   const getCustomer = async () => {
+    const config = {
+      headers: {
+        Authorization: 'Bearer ' + user.accessToken
+      }
+    }
     try {
-      setLoading(true);
+      // setLoading(true)
       const { data } = await axiosApiInstance.get(
         `${process.env.REACT_APP_AUTH_API}/user/${user.user.sub}`,
         config
-      );
-      setLoading(false);
-      setCustomer(await data);
-
-    } catch (error) {
-      dispatch(logout());
-      console.log("Error in customer-card.js");
-    }
-  };
-
-  const goToTransactions = () => {
-      navigate("/transactions")
+      )
+      // setLoading(false)
+      setCustomer(await data)
+    } catch (error) {}
   }
-  
+
+  /**
+   * Navigates to the transactions page.
+   */
+  const goToTransactions = () => {
+    navigate('/transactions')
+  }
+
   useEffect(() => {
-      getCustomer()
+    getCustomer()
   }, [])
 
-
-
   return (
-
+    <>
+      {location.state?.message && (
+        <Alert severity="success">
+          <AlertTitle>{location.state?.message}</AlertTitle>
+        </Alert>
+      )}
       <div className="customerCardContainer">
-    <Card className="customerCard" sx={{boxShadow: "none", width: '100%', maxWidth: 1500, padding: 2, margin: 3 }}>
+        <Card
+          className="customerCard"
+          sx={{
+            boxShadow: 'none',
+            width: '100%',
+            maxWidth: 1500,
+            padding: 2,
+            margin: 3
+          }}
+        >
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {customer.company}
+            </Typography>
+            {!customer.admin && (
+              <Typography variant="body2" color="text.secondary">
+                Organisationsnummer: {customer.orgNo}
+              </Typography>
+            )}
+            <Typography variant="body2" color="text.secondary">
+              Email: {customer.email}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            {!customer.admin && (
+              <Button size="small" onClick={goToTransactions}>
+                Transaktioner
+              </Button>
+            )}
+            {!customer.admin && (
+            <Button
+              size="small"
+              component={Link}
+              to="/mina-uppgifter/uppdatera"
+            >
+              Ändra epostaddress
+            </Button>)}
+            {!customer.admin && (
 
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-            {customer.company}
-        </Typography>
-        {!customer.admin && <Typography variant="body2" color="text.secondary">
-          Organisationsnummer: {customer.orgNo}
-        </Typography>}
-        <Typography variant="body2" color="text.secondary">
-          Email: {customer.email}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        {!customer.admin && <Button size="small" onClick={goToTransactions}>Transaktioner</Button>}
-        <Button size="small" component={Link} to="/mina-uppgifter/uppdatera">Ändra uppgifter</Button>
-        <Button size="small" component={Link} to="/mina-uppgifter/password/uppdatera">Ändra lösenord</Button>
-      </CardActions>
-    </Card>
-    </div>
-  );
-};
+            <Button
+              size="small"
+              component={Link}
+              to="/mina-uppgifter/losenord/uppdatera"
+            >
+              Ändra lösenord
+            </Button>)}
 
-export default CustomerCard;
+            {customer.admin && (
+            <Button
+            size="small"
+            component={Link}
+            to="/admin/mina-uppgifter/uppdatera"
+          >
+            Ändra epostaddress
+          </Button>)}
+
+          {customer.admin && (
+            <Button
+            size="small"
+            component={Link}
+            to="/admin/mina-uppgifter/losenord/uppdatera"
+          >
+            Ändra lösenord
+          </Button>)}
+          </CardActions>
+        </Card>
+      </div>
+    </>
+  )
+}
+
+export default CustomerCard

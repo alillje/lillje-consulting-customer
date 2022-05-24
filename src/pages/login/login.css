@@ -26,6 +26,10 @@
     grid-area: 2 / 5 / 6 / 7;
   
   }
+
+  .loginErrorContainer {
+    margin-top: 0;
+  }
   
   button:hover {
       background-color: #484848;

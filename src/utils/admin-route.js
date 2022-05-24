@@ -1,30 +1,32 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
+import * as React from 'react'
+import { Navigate, Outlet } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
+/**
+ * Admin Route Component.
+ * Protects admin routes from unauthorized users.
+ *
+ * @returns {React.ReactElement} - Admin Route Component.
+ */
 const AdminRoute = () => {
-  let notAdmin = false;
-  let admin = false;
-  let unAuthorized = true;
+  let notAdmin = false
+  let admin = false
 
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user)
 
   if (user?.auth && user?.admin) {
-    admin = true;
+    admin = true
   } else if (user?.auth) {
-    notAdmin = true;
+    notAdmin = true
   }
 
-  console.log("ADMIN ROUTE");
   if (admin) {
-    return <Outlet />;
+    return <Outlet />
   } else if (notAdmin) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/dashboard" />
   } else {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" />
   }
+}
 
-  //   {admin && <Outlet />}
-  //   {notAdmin && <Navigate to="/dashboard" />};
-};
-
-export default AdminRoute;
+export default AdminRoute

@@ -1,57 +1,66 @@
-import { useState } from "react";
-import "./sidebar.css";
-import { Link } from "react-router-dom";
-import Box from "@mui/material/Box";
+import './sidebar.css'
+import * as React from 'react'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { hideSidemenu } from '../../redux/reducers/sidemenu'
+import { logoutHandler } from '../../services/logout-service'
 
-import Drawer from "@mui/material/Drawer";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Collapse from "@mui/material/Collapse";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
+// Material UI Components
+import Box from '@mui/material/Box'
+import Drawer from '@mui/material/Drawer'
+import Toolbar from '@mui/material/Toolbar'
+import List from '@mui/material/List'
+import Divider from '@mui/material/Divider'
+import ListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import Collapse from '@mui/material/Collapse'
+import ExpandLess from '@mui/icons-material/ExpandLess'
+import ExpandMore from '@mui/icons-material/ExpandMore'
 
-// Icons
-import AddBoxSharpIcon from "@mui/icons-material/AddBoxSharp";
-import ViewListSharpIcon from "@mui/icons-material/ViewListSharp";
-import LogoutSharpIcon from "@mui/icons-material/LogoutSharp";
-import ManageSearchSharpIcon from "@mui/icons-material/ManageSearchSharp";
-import KeyboardDoubleArrowRightSharpIcon from "@mui/icons-material/KeyboardDoubleArrowRightSharp";
-import PeopleOutlineSharpIcon from "@mui/icons-material/PeopleOutlineSharp";
-import { useSelector, useDispatch } from "react-redux";
-import { hideSidemenu } from "../../redux/reducers/sidemenu";
-
-import { logoutHandler } from "../../services/logout-service";
-import { useEffect } from "react";
+// Material UI Icons
+import AddBoxSharpIcon from '@mui/icons-material/AddBoxSharp'
+import ViewListSharpIcon from '@mui/icons-material/ViewListSharp'
+import LogoutSharpIcon from '@mui/icons-material/LogoutSharp'
+import ManageSearchSharpIcon from '@mui/icons-material/ManageSearchSharp'
+import KeyboardDoubleArrowRightSharpIcon from '@mui/icons-material/KeyboardDoubleArrowRightSharp'
+import PeopleOutlineSharpIcon from '@mui/icons-material/PeopleOutlineSharp'
 
 /**
- * Component
+ * Sidebar Component.
+ * Displays a sidebar with buttons and links. Displayed for non-admin users only.
  *
- * @param {*} props
- * @return {*}
+ * @param {string} width - The width to set for the sidebar.
+ * @returns {React.ReactElement} - Sidebar Component.
  */
 const Sidebar = ({ width = undefined }) => {
-  const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user)
+  const [open, setOpen] = useState(false)
+  const dispatch = useDispatch()
+  const drawerWidth = width || 250
 
+  /**
+   * Logs a user out.
+   */
   const handleLogout = () => {
-    logoutHandler(user);
-  };
+    logoutHandler(user)
+  }
 
-  const [open, setOpen] = useState(false);
+  /**
+   * Toggles the sidebar visibility.
+   */
+  const toggleSidebarVisibility = () => {
+    setOpen(!open)
+  }
 
-  const handleClick = () => {
-    setOpen(!open);
-  };
+  /**
+   * Hides the sidebar, if media screen is less than 700px.
+   */
+  const hideMobileSidebar = () => {
+    dispatch(hideSidemenu())
+  }
 
-  const setSidebarVisibility = () => {
-    dispatch(hideSidemenu());
-  };
-
-  const drawerWidth = width ? width : 250;
   return (
     <Drawer
       className="sidebarDrawer"
@@ -60,16 +69,16 @@ const Sidebar = ({ width = undefined }) => {
         width: drawerWidth,
         m: 0,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
+        '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box' }
       }}
     >
-      {" "}
-      <Box sx={{ overflow: "auto" }}>
+      {' '}
+      <Box sx={{ overflow: 'auto' }}>
         <Toolbar />
         <List>
           <ListItem
             button
-            onClick={setSidebarVisibility}
+            onClick={hideMobileSidebar}
             component={Link}
             to="/transactions/register"
           >
@@ -79,7 +88,7 @@ const Sidebar = ({ width = undefined }) => {
             <ListItemText primary="Ny transaktion" />
           </ListItem>
 
-          <ListItem onClick={handleClick}>
+          <ListItem onClick={toggleSidebarVisibility}>
             <ListItemIcon>
               <ViewListSharpIcon />
             </ListItemIcon>
@@ -90,7 +99,7 @@ const Sidebar = ({ width = undefined }) => {
             <List component="div" disablePadding>
               <ListItem
                 button
-                onClick={setSidebarVisibility}
+                onClick={hideMobileSidebar}
                 component={Link}
                 to="/transactions"
                 sx={{ pl: 4 }}
@@ -102,7 +111,7 @@ const Sidebar = ({ width = undefined }) => {
               </ListItem>
               <ListItem
                 button
-                onClick={setSidebarVisibility}
+                onClick={hideMobileSidebar}
                 component={Link}
                 to="/transactions/done"
                 sx={{ pl: 4 }}
@@ -114,7 +123,7 @@ const Sidebar = ({ width = undefined }) => {
               </ListItem>
               <ListItem
                 button
-                onClick={setSidebarVisibility}
+                onClick={hideMobileSidebar}
                 component={Link}
                 to="/transactions/open"
                 sx={{ pl: 4 }}
@@ -126,7 +135,7 @@ const Sidebar = ({ width = undefined }) => {
               </ListItem>
               <ListItem
                 button
-                onClick={setSidebarVisibility}
+                onClick={hideMobileSidebar}
                 component={Link}
                 to="/transactions/leverantorsfakturor"
                 sx={{ pl: 4 }}
@@ -138,7 +147,7 @@ const Sidebar = ({ width = undefined }) => {
               </ListItem>
               <ListItem
                 button
-                onClick={setSidebarVisibility}
+                onClick={hideMobileSidebar}
                 component={Link}
                 to="/transactions/kundfakturor"
                 sx={{ pl: 4 }}
@@ -150,7 +159,7 @@ const Sidebar = ({ width = undefined }) => {
               </ListItem>
               <ListItem
                 button
-                onClick={setSidebarVisibility}
+                onClick={hideMobileSidebar}
                 component={Link}
                 to="/transactions/utlagg"
                 sx={{ pl: 4 }}
@@ -165,7 +174,7 @@ const Sidebar = ({ width = undefined }) => {
 
           <ListItem
             button
-            onClick={setSidebarVisibility}
+            onClick={hideMobileSidebar}
             component={Link}
             to="/transactions/search"
           >
@@ -177,7 +186,7 @@ const Sidebar = ({ width = undefined }) => {
           <Divider />
           <ListItem
             button
-            onClick={setSidebarVisibility}
+            onClick={hideMobileSidebar}
             component={Link}
             to="/mina-uppgifter"
           >
@@ -195,7 +204,7 @@ const Sidebar = ({ width = undefined }) => {
         </List>
       </Box>
     </Drawer>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar

@@ -1,0 +1,25 @@
+.pdfViewerContainer {
+    width:100%;
+    height:100vh;
+}
+
+.pdfViewerContainer iframe {
+    width:100%;
+    height:100vh;
+}
+/* .pdfMobileViewerContainer {
+    display:none;
+}
+
+@media screen and (min-width: 700px) {
+    .pdfDesktopViewerContainer {
+        display:none;
+    }
+
+    .pdfMobileViewerContainer {
+        display:block;
+        width:100%;
+        height:100vh;
+
+    }
+} */

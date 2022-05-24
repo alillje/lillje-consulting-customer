@@ -1,15 +1,15 @@
-import "./admin-customers.css";
-import CustomersList from "../../components/customers-list/customers-list"
+import './admin-customers.css'
+import * as React from 'react'
+import CustomersList from '../../components/customers-list/customers-list'
 
-
-import * as React from "react";
-
-
+/**
+ * Admin Customers Component.
+ * Represents the page for viewing a all customers when authenticated as an admin user.
+ *
+ * @returns {React.ReactElement} - Admin Customers Component.
+ */
 const AdminCustomers = () => {
+  return <CustomersList />
+}
 
-  return (
-    <CustomersList />
-  );
-};
-
-export default AdminCustomers;
+export default AdminCustomers

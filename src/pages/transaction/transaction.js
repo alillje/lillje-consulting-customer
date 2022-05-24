@@ -1,80 +1,70 @@
-import "./transaction.css";
-import { useState, useEffect } from "react"
-import TransactionCard from "../../components/transaction-card/transaction-card"
-import { useSelector } from "react-redux";
-import axiosApiInstance from "../../services/axios-interceptor";
-import { useNavigate, useLocation } from "react-router-dom";
-import { logout } from "../../redux/reducers/user";
-import { useDispatch } from "react-redux";
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
+import './transaction.css'
+import * as React from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import axiosApiInstance from '../../services/axios-interceptor'
+import TransactionCard from '../../components/transaction-card/transaction-card'
 
+// Material UI Components
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+import CircularProgress from '@mui/material/CircularProgress'
 
-
-import CircularProgress from "@mui/material/CircularProgress";
-
-
-
+/**
+ * Transaction Component.
+ * Represents the transaction page.
+ *
+ * @returns {React.ReactElement} - Transaction Component.
+ */
 const Transaction = () => {
-    const transaction = useSelector((state) => state.transaction);
-    const user = useSelector((state) => state.user);
-    const [data, setData] = useState(null)
-    const [loading, setLoading] = useState(false);
+  const transaction = useSelector((state) => state.transaction)
+  const user = useSelector((state) => state.user)
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
 
-    const navigate = useNavigate()
-    const location = useLocation();
-    const dispatch = useDispatch();
+  /**
+   * Makes request to API and get a specific transaction.
+   */
+  const getTransaction = async () => {
+    const config = {
+      headers: {
+        Authorization: 'Bearer ' + user.accessToken
+      }
+    }
+    try {
+      setLoading(true)
+      const { data } = await axiosApiInstance.get(
+        `${process.env.REACT_APP_RESOURCE_API}/resources/${transaction.id}`,
+        config
+      )
+      setData(data)
+      setLoading(false)
+    } catch (error) {
+      user.auth ? navigate('/error') : navigate('/login')
+    }
+  }
 
+  useEffect(() => {
+    if (transaction) {
+      getTransaction()
+    } else {
+      setLoading(false)
+    }
+  }, [])
 
-    let config = {
-        headers: {
-          Authorization: "Bearer " + user.accessToken,
-        },
-      };
+  return (
+    <div>
+      {location.state?.message && (
+        <Alert severity="success">
+          <AlertTitle>{location.state?.message}</AlertTitle>
+        </Alert>
+      )}
+      {loading ? <CircularProgress /> : <TransactionCard transaction={data} />}
+    </div>
+  )
+}
 
-    const getTransaction = async () => {
-        try {
-          setLoading(true);
-          const { data } = await axiosApiInstance.get(
-            `${process.env.REACT_APP_RESOURCE_API}/resources/${transaction.id}`,
-            config
-          );
-            setData(data)
-          setLoading(false);
-        } catch (error) {
-          console.log("Error in transaction.js");
-
-          if (error.status === 401) {
-            dispatch(
-              logout()
-            );
-          } else {
-        user.auth ? navigate('/error') : navigate('/login')
-          }
-        }
-      };
-    
-
-    useEffect(() => {
-      console.log(location.state?.message)
-        if (transaction) {
-        getTransaction();
-        } else {
-            setLoading(false);
-        }
-      }, []);
-
-    return (
-        
-        <div>
-           {location.state?.message &&       <Alert severity="success">
-        <AlertTitle>{location.state?.message}</AlertTitle>
-      </Alert>}
-        {loading ? <CircularProgress /> : <TransactionCard transaction={data} />}
-        </div>
-
-    )
-  
-};
-
-export default Transaction;
+export default Transaction

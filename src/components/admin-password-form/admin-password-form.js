@@ -1,30 +1,29 @@
-import './password-form.css'
+import './admin-password-form.css'
 import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import validator from 'validator'
+import axiosApiInstance from '../../services/axios-interceptor'
 
 // Material UI components
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import axiosApiInstance from '../../services/axios-interceptor'
 import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 
 // TODO: Valitation of input
 /**
- * Password Form Component.
- * Displays a form for the user to change their password, at submit, a request to change the password is sent.
+ * Admin Password Form Component.
+ * Displays a form and changes a specific user's password.
  *
- * @returns {React.ReactElement} - Password Form Component.
+ * @param {string} customerId - The ID of the customer to change password for.
+ * @param {string} customerCompany - The name of the customer company to display info about.
+ * @returns {React.ReactElement} - Admin Password Form Component.
  */
-const PasswordForm = () => {
+const AdminPasswordForm = ({ customerId = undefined }, { customerCompany = undefined }) => {
   const user = useSelector((state) => state.user)
-  const [customer, setCustomer] = useState({})
-  const [password, setPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('')
   const [loading, setLoading] = useState(false)
@@ -32,35 +31,14 @@ const PasswordForm = () => {
   const navigate = useNavigate()
 
   /**
-   * Makes request to API and get a specific customer.
-   */
-  const getCustomer = async () => {
-    const config = {
-      headers: {
-        Authorization: 'Bearer ' + user.accessToken
-      }
-    }
-    try {
-      setLoading(true)
-      const { data } = await axiosApiInstance.get(
-        `${process.env.REACT_APP_AUTH_API}/user/${user.user.sub}`,
-        config
-      )
-      setCustomer(await data)
-      setLoading(false)
-    } catch (error) {}
-  }
-
-  /**
-   * Changes the password of the user if all input is correct.
+   * Sends a patch request to update the password of a specific user.
    *
    * @param {object} event - An event object.
    */
-  const changePassword = async (event) => {
+  const updateCustomerPassword = async (event) => {
     event.preventDefault()
     const reqBody = {
-      email: validator.escape(customer.email),
-      password,
+      customer: customerId,
       newPassword,
       newPasswordConfirm
     }
@@ -73,52 +51,42 @@ const PasswordForm = () => {
     // Only make request if all input is valid
     if (
       newPassword === newPasswordConfirm &&
-      password.length > 0 &&
+      newPassword.length > 0 &&
       newPassword.length >= 10 &&
       newPasswordConfirm.length >= 10
     ) {
       try {
         setLoading(true)
         await axiosApiInstance.patch(
-          `${process.env.REACT_APP_AUTH_API}/password/${user.user.sub}`,
+          `${process.env.REACT_APP_AUTH_API}/users/password/reset`,
           reqBody,
           reqHeaders
         )
         setLoading(false)
-        user.admin ? navigate('/admin/mina-uppgifter', {
-          state: { message: 'Lösenordet uppdaterades' }
-        }) : navigate('/mina-uppgifter', {
-          state: { message: 'Lösenordet uppdaterades' }
+        navigate(`/admin/customers/${customerId}`, {
+          state: { message: 'Lösenordet har uppdaterats' }
         })
       } catch (err) {
-        const error = JSON.parse(JSON.stringify(err))
         // Set error messages
+        const error = JSON.parse(JSON.stringify(err))
         if (error.status === 400) {
           setErrorMessage('Felaktigt lösenord')
-          setPassword('')
           setNewPassword('')
           setNewPasswordConfirm('')
           setLoading(false)
         } else {
           setErrorMessage('Ett oväntat fel inträffade')
-          setPassword('')
           setNewPassword('')
           setNewPasswordConfirm('')
-          setLoading(false)
         }
       }
     } else {
       setErrorMessage('Felaktigt lösenord')
-      setPassword('')
       setNewPassword('')
       setNewPasswordConfirm('')
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    getCustomer()
-  }, [])
 
   return loading ? (
     <div className="updatePasswordLoadingCircle">
@@ -127,7 +95,7 @@ const PasswordForm = () => {
   ) : (
     <div>
       <div className="trasactionFormHeader">
-        <h5>Ändra lösenord</h5>
+        <h5>Ändra lösenord för {customerCompany}</h5>
       </div>
       <Box
         component="form"
@@ -136,23 +104,13 @@ const PasswordForm = () => {
         }}
         noValidate
         autoComplete="off"
-        onSubmit={changePassword}
+        onSubmit={updateCustomerPassword}
       >
         {errorMessage && (
           <Alert severity="warning" className="searchErrorMessage">
             <AlertTitle> {errorMessage}</AlertTitle>
           </Alert>
         )}
-
-        <TextField
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          id="outlined-basic"
-          label="Nuvarande lösenord"
-          variant="outlined"
-          type="password"
-          required
-        />
 
         <TextField
           helperText="Lösenordet måste bestå av minst 10 tecken"
@@ -184,4 +142,4 @@ const PasswordForm = () => {
   )
 }
 
-export default PasswordForm
+export default AdminPasswordForm

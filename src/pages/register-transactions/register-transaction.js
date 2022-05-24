@@ -1,19 +1,15 @@
-import "./register-transaction.css";
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import axiosApiInstance from "../../services/axios-interceptor";
+import './register-transaction.css'
+import * as React from 'react'
+import TransactionForm from '../../components/transaction-form/transaction-form'
 
-import TransactionForm from "../../components/transaction-form/transaction-form";
-
-
+/**
+ * Register Transaction Component.
+ * Represents the transaction registration page.
+ *
+ * @returns {React.ReactElement} - Register Transaction Component.
+ */
 const RegisterTransaction = () => {
+  return <TransactionForm />
+}
 
-
-  return (
-
-    <TransactionForm />
-
-  );
-};
-
-export default RegisterTransaction;
+export default RegisterTransaction

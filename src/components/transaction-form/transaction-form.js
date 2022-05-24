@@ -1,166 +1,188 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
-import "./transaction-form.css";
-import axiosApiInstance from "../../services/axios-interceptor";
-import axios from "axios";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useNavigate } from "react-router-dom";
-import { setTransaction } from "../../redux/reducers/transaction";
+import './transaction-form.css'
+import * as React from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import validator from 'validator'
 
-import { useSelector, useDispatch } from "react-redux";
-import validator from "validator";
+// Material UI components
+import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import MenuItem from '@mui/material/MenuItem'
+import Button from '@mui/material/Button'
+import axiosApiInstance from '../../services/axios-interceptor'
+import CircularProgress from '@mui/material/CircularProgress'
+import { setTransaction } from '../../redux/reducers/transaction'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+import { setVatRate } from './helper-functions/calculate-vat'
 
-// Alert
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
-
-import { setVateRate, setVatRate } from "./helper-functions/calculate-vat"
-
-// TODO: Valitation of input
+/**
+ * Transaction Form Component.
+ * Displays a form and the options to create a new transaction.
+ *
+ * @returns {React.ReactElement} - Transaction Form Component.
+ */
 const TransactionForm = () => {
-  const user = useSelector((state) => state.user);
-
-  const [description, setDescription] = useState("");
-  const [company, setCompany] = useState("");
-  const [date, setDate] = useState("");
-  const [amountExVat, setAmountExVat] = useState("");
-  const [transactionCategory, setTransactionCategory] = useState("");
-  const [transactionType, setTransactionType] = useState("");
-  const [viewCategories, setViewCategories] = useState(true);
-  const [vat, setVat] = useState("");
-
-  const [file, setFile] = useState();
-
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [minParams, setMinParams] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const vatRates = ["0%", "6%", "12%", "25%"]
-  const transactionTypes = ["Leverantörsfaktura", "Kundfaktura", "Utlägg"];
+  const user = useSelector((state) => state.user)
+  const [description, setDescription] = useState('')
+  const [company, setCompany] = useState('')
+  const [date, setDate] = useState('')
+  const [amountExVat, setAmountExVat] = useState('')
+  const [transactionCategory, setTransactionCategory] = useState('')
+  const [transactionType, setTransactionType] = useState('')
+  const [viewCategories, setViewCategories] = useState(true)
+  const [vat, setVat] = useState('')
+  const [file, setFile] = useState()
+  const [loading, setLoading] = useState(false)
+  const [minParams, setMinParams] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  // Set fixed options
+  const vatRates = ['0%', '6%', '12%', '25%']
+  const transactionTypes = ['Leverantörsfaktura', 'Kundfaktura', 'Utlägg']
   const transactionCategories = [
-    "Bensin",
-    "Material",
-    "Mobil",
-    "Internet",
-    "Försäkring",
-    "Övrigt",
-  ];
+    'Bensin',
+    'Material',
+    'Mobil',
+    'Internet',
+    'Försäkring',
+    'Övrigt'
+  ]
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setLoading(true);
-    let fileUrl = "";
-    let validFileFormat = false;
-
-    console.log(file)
-  
-    // Validate file type and upload file 
-    try {
-    if (file) {
-      if (
-        file.type === "application/pdf" ||
-        file.type === "image/png" ||
-        file.type === "image/jpg" ||
-        file.type === "image/jpeg"
-      ) {
-        validFileFormat = true;
-
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append(
-          "upload_preset",
-          process.env.REACT_APP_CLOUDINARY_PRESET
-        );
-        const dataRes = await axios.post(
-          process.env.REACT_APP_CLOUDINARY_UPLOAD,
-          formData
-        );
-        fileUrl = dataRes.data.url;
-          console.log(fileUrl);
+  // This code snippet was found at https://stackoverflow.com/questions/36280818/how-to-convert-file-to-base64-in-javascript
+  // Specific comment: https://stackoverflow.com/a/70106512
+  /**
+   * Encodes a file to base64.
+   *
+   * @param {object} file - The file to be encoded.
+   * @returns {Promise} - Promise representing the base64 encoded string.
+   */
+  const getBase64 = (file) => {
+    return new Promise(function (resolve, reject) {
+      const reader = new window.FileReader()
+      /**
+       * Resolves the promise on File Reader load.
+       */
+      reader.onload = function () {
+        resolve(reader.result.substr(reader.result.indexOf(',') + 1))
       }
-    } } catch (error) {
-      console.log(error)
-      setErrorMessage("Ett oväntat fel inträffade");
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
+  }
+
+  /**
+   * Checks input and creates a new transaction by sending a post request to API.
+   *
+   * @param {object} event - An event object.
+   */
+  const registerTranasction = async (event) => {
+    event.preventDefault()
+    setLoading(true)
+    // let fileUrl = "";
+    let validFileFormat = false
+    let validFileSize = false
+    let amountIsNumber = false
+
+    // Check filetype and file size
+    if (file) {
+      if (file.type === 'application/pdf') {
+        validFileFormat = true
+      }
+      if (file.size <= 2000000) {
+        validFileSize = true
+        // Check if amount is number
+      }
+      if (!isNaN(parseInt(amountExVat))) {
+        amountIsNumber = true
+      }
     }
+    // Only send request if input is valid
+    if (minParams && validFileFormat && validFileSize && amountIsNumber) {
+      const reqBody = {
+        description: validator.escape(description),
+        authorName: user.company,
+        company: validator.escape(company),
+        transactionType: validator.escape(transactionType),
+        transactionCategory:
+          transactionType === 'Leverantörsfaktura' ? validator.escape(transactionCategory) : 'Försäljning',
+        vat: setVatRate(vat),
+        amountExVat: parseInt(validator.escape(amountExVat)),
+        author: validator.escape(user.user.sub),
+        date: new Date(date).getTime() / 1000,
+        documentUrl: await getBase64(file)
+      }
+      const reqHeaders = {
+        headers: {
+          Authorization: 'Bearer ' + user.accessToken
+        }
+      }
 
-    const reqBody = {
-      description: validator.escape(description),
-      authorName: user.company,
-      company: validator.escape(company),
-      transactionType: validator.escape(transactionType),
-      transactionCategory:
-        transactionType !== "Leverantörsfaktura"
-          ? validator.escape(transactionCategory)
-          : "Försäljning",
-      vat: setVatRate(vat),
-      amountExVat: validator.escape(amountExVat),
-      author: validator.escape(user.user.sub),
-      date: new Date(date).getTime() / 1000,
-      documentUrl: fileUrl,
-    };
-    let reqHeaders = {
-      headers: {
-        Authorization: "Bearer " + user.accessToken,
-      },
-    };
-
-    if (minParams && validFileFormat) {
       try {
         const { data } = await axiosApiInstance.post(
           `${process.env.REACT_APP_RESOURCE_API}/resources`,
           reqBody,
           reqHeaders
-        );
-        setLoading(false);
+        )
+        setLoading(false)
         dispatch(
           setTransaction({
             id: data.id,
-            sub: user.user.sub,
+            sub: user.user.sub
           })
-        );
+        )
         navigate(`/transactions/${data.id}`, {
-          state: { message: "Transaktionen har registrerats" },
-        });
+          state: { message: 'Transaktionen har registrerats' }
+        })
       } catch (error) {
-        console.log(error);
-        console.log("Error in transaction/register");
-        setLoading(false);
-        setErrorMessage("Ett oväntat fel inträffade");
+        setLoading(false)
+        setErrorMessage('Ett oväntat fel inträffade')
       }
+    }
+    // Set error messages
+    if (!minParams) {
+      setErrorMessage(
+        'Alla fält måste fyllas i för att kunna registrera en ny transaktion'
+      )
+      setLoading(false)
+    } else if (!amountIsNumber) {
+      setErrorMessage('Belopp får bara innehålla siffror')
+      setLoading(false)
     } else if (!validFileFormat) {
-      setErrorMessage("Tillåtna filformat är .pdf, .jpg, .jpeg, .png");
-      setLoading(false);
+      setErrorMessage('Tillåtet filformat är .pdf')
+      setLoading(false)
+    } else if (!validFileSize) {
+      setErrorMessage('Maxstorlek för bifogad fil är 2MB')
+      setLoading(false)
     } else {
       setErrorMessage(
-        "Alla fält måste fyllas i för att kunna registrera en ny transaktion"
-      );
-      setLoading(false);
+        'Alla fält måste fyllas i för att kunna registrera en ny transaktion'
+      )
+      setLoading(false)
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   useEffect(() => {
-    if (transactionType === "Leverantörsfaktura") {
-      setViewCategories(true);
-    } else if (transactionType !== "Leverantörsfaktura") {
-      setViewCategories(false);
+    if (transactionType === 'Leverantörsfaktura') {
+      setViewCategories(true)
+    } else if (transactionType !== 'Leverantörsfaktura') {
+      setViewCategories(false)
     }
 
     if (
       company.length > 0 &&
       date.length > 0 &&
       amountExVat.length > 0 &&
-      description.length > 0
+      description.length > 0 &&
+      file &&
+      vat.length > 0
     ) {
-      setMinParams(true);
+      setMinParams(true)
     } else {
-      setMinParams(false);
+      setMinParams(false)
     }
   }, [
     minParams,
@@ -169,17 +191,17 @@ const TransactionForm = () => {
     amountExVat,
     description,
     transactionType,
-    viewCategories
-  ]);
+    transactionCategory,
+    viewCategories,
+    file,
+    vat
+  ])
 
-  return loading ? (
-    <CircularProgress />
-  ) : (
+  return loading ? (<CircularProgress />) : (
     <div>
       {errorMessage && (
-        <Alert severity="info" className="searchErrorMessage">
-          <AlertTitle>Ett fel inträffade</AlertTitle>
-          {errorMessage}
+        <Alert severity="warning" className="searchErrorMessage">
+          <AlertTitle>{errorMessage}</AlertTitle>
         </Alert>
       )}
       <div className="trasactionFormHeader">
@@ -188,24 +210,25 @@ const TransactionForm = () => {
       <Box
         component="form"
         sx={{
-          "& > :not(style)": { m: 3, width: "90%" },
+          '& > :not(style)': { m: 3, width: '90%' }
         }}
         noValidate
         autoComplete="off"
-        onSubmit={handleSubmit}
+        onSubmit={registerTranasction}
       >
         <TextField
           value={transactionType}
           onChange={(event) => setTransactionType(event.target.value)}
           select // tell TextField to render select
           label="Typ av transaktion"
+          required
         >
           {transactionTypes.map((type) => {
             return (
               <MenuItem key={type} value={type}>
                 {type}
               </MenuItem>
-            );
+            )
           })}
         </TextField>
         {viewCategories && (
@@ -220,20 +243,22 @@ const TransactionForm = () => {
                 <MenuItem key={category} value={category}>
                   {category}
                 </MenuItem>
-              );
+              )
             })}
           </TextField>
         )}
 
         <TextField
+          helperText="Företagsnamn. Är kunden en privatperson anger du namnet här."
           id="outlined-basic"
-          label="Företag"
+          label="Företag / Namn"
           variant="outlined"
           value={company}
           onChange={(event) => setCompany(event.target.value)}
           required
         />
         <TextField
+          helperText="En kort beskrivning av transaktionen."
           id="outlined-basic"
           label="Beskrivning"
           variant="outlined"
@@ -243,25 +268,28 @@ const TransactionForm = () => {
         />
         <TextField
           value={amountExVat}
-          onChange={(event) => setAmountExVat(event.target.value)}
+          onChange={(event) =>
+            setAmountExVat(event.target.value.replaceAll(' ', ''))
+          }
           id="outlined-basic"
           label="Belopp Exkl. Moms"
           variant="outlined"
           required
         />
 
-<TextField
+        <TextField
           value={vat}
           onChange={(event) => setVat(event.target.value)}
           select // tell TextField to render select
           label="Momssats"
+          required
         >
           {vatRates.map((vatRate) => {
             return (
               <MenuItem key={vatRate} value={vatRate}>
                 {vatRate}
               </MenuItem>
-            );
+            )
           })}
         </TextField>
 
@@ -274,23 +302,26 @@ const TransactionForm = () => {
           required
           sx={{ width: 220 }}
           InputLabelProps={{
-            shrink: true,
+            shrink: true
           }}
         />
         <TextField
+         helperText="En verifikation måste bifogas till transaktionen. Tillåtet format är .pdf och max filstorlek är 2MB."
           type="file"
           className="position-relative mt-2"
           name="file"
-          accept="image/png, image.jpg, application/pdf"
+          label=" "
+          accept="application/pdf"
           onChange={(e) => setFile(e.target.files[0])}
           id="validationFormik107"
           feedbackTooltip
+          required
         />
 
         <Button type="submit">Registrera transaktion</Button>
       </Box>
     </div>
-  );
-};
+  )
+}
 
-export default TransactionForm;
+export default TransactionForm
