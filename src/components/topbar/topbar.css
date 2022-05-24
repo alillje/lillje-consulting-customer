@@ -1,24 +1,21 @@
 .topBar {
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .topbarHomeButton {
-    text-decoration: none;
-    color: #ffffff;
+  text-decoration: none;
+  color: #ffffff;
 }
 
 .topbarHomeButton:hover {
-    color: #ffffff;
-
+  color: #ffffff;
 }
 
 .topbarHomeButtonMobile {
-    text-decoration: none;
-    color: #ffffff; 
+  text-decoration: none;
+  color: #ffffff;
 }
 
 .topbarHomeButtonMobile:hover {
-    color: #ffffff;
-
+  color: #ffffff;
 }

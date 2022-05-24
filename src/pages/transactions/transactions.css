@@ -38,11 +38,6 @@ display: flex;
 justify-content: center;
 }
 
-/* .transactionsTopbar button { 
-    grid-area: 1 / 1 / 2 / 4;
-    display: flex;
-    justify-content: center;
-    } */
 
 .resourceList {
     grid-column: 1 / 4;
@@ -64,4 +59,18 @@ justify-content: center;
     justify-content: center;
     align-items: flex-end;
     margin-bottom: 20px;
+}
+
+.loadingSpinnerTransactions {
+    margin: 0 auto;
+    grid-row: 4;
+    grid-column: 1 / 4;
+}
+
+.noTransactionsToView {
+    grid-row: 4;
+    grid-column: 1 / 4; 
+    text-align: center;
+    color:#717171;
+    font-size: 20px;
 }

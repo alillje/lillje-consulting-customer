@@ -1,48 +1,63 @@
-import { createSlice } from "@reduxjs/toolkit";
-import jwt_decode from "jwt-decode";
+/**
+ * Redux user module.
+ * Create a user slice with different actions
+ *
+ * @author Andreas Lillje <a.lillje@gmail.com>
+ */
 
-// Create a user slice with different actions
+/* eslint-disable camelcase */
+import { createSlice } from '@reduxjs/toolkit'
+import jwt_decode from 'jwt-decode'
 export const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState: {
-    user: localStorage.getItem("lc_ab_mb_token")
-      ? jwt_decode(localStorage.getItem("lc_ab_mb_token"))
-      : null,
-    accessToken: localStorage.getItem("lc_ab_mb_token")
-      ? localStorage.getItem("lc_ab_mb_token")
-      : null,
-    refreshToken: localStorage.getItem("lc_ab_mb_refresh_token")
-      ? localStorage.getItem("lc_ab_mb_refresh_token")
-      : null,
-    auth: localStorage.getItem("lc_ab_mb_token") ? true : false,
-    admin: localStorage.getItem("lc_ab_mb_refresh_token") ? jwt_decode(localStorage.getItem("lc_ab_mb_token")).admin : null
+    user: window.localStorage.getItem('lc_ab_mb_token') ? jwt_decode(window.localStorage.getItem('lc_ab_mb_token')) : null,
+    accessToken: window.localStorage.getItem('lc_ab_mb_token') ? window.localStorage.getItem('lc_ab_mb_token') : null,
+    refreshToken: window.localStorage.getItem('lc_ab_mb_refresh_token') ? window.localStorage.getItem('lc_ab_mb_refresh_token') : null,
+    auth: window.localStorage.getItem('lc_ab_mb_token'),
+    admin: window.localStorage.getItem('lc_ab_mb_refresh_token') ? jwt_decode(window.localStorage.getItem('lc_ab_mb_token')).admin : null
   },
   reducers: {
+    /**
+     * Dispatched on user login and sets all state variables to values defined in the action object.
+     *
+     * @param {object} state - Redux state object.
+     * @param {object} action - Object containing the different state values to be set.
+     */
     login: (state, action) => {
-      state.user = action.payload.user;
-      state.refreshToken = action.payload.refresh_token;
+      state.user = action.payload.user
+      state.refreshToken = action.payload.refresh_token
       state.accessToken = action.payload.access_token
-      state.auth = true;
+      state.auth = true
       state.admin = jwt_decode(action.payload.access_token).admin
     },
+    /**
+     * Dispatched on user logout and sets all state variables to initialState.
+     *
+     * @param {object} state - Redux state object.
+     */
     logout: (state) => {
-      state.user = null;
-      state.refreshToken = null;
+      state.user = null
+      state.refreshToken = null
       state.accessToken = null
-      state.auth = false;
+      state.auth = false
       state.admin = false
-
     },
+    /**
+     * Dispatched when user refresh an accessToken and sets all state variables to values defined in the action object.
+     *
+     * @param {object} state - Redux state object.
+     * @param {object} action - Object containing the different state values to be set.
+     */
     refresh: (state, action) => {
-      state.user = action.payload.user;
-      state.refreshToken = action.payload.refresh_token;
-      state.accessToken = action.payload.access_token;
-      state.auth = true;
+      state.user = action.payload.user
+      state.refreshToken = action.payload.refresh_token
+      state.accessToken = action.payload.access_token
+      state.auth = true
       state.admin = jwt_decode(action.payload.access_token).admin
+    }
+  }
+})
 
-    },
-  },
-});
-
-export const { login, logout, refresh } = userSlice.actions;
-export default userSlice.reducer;
+export const { login, logout, refresh } = userSlice.actions
+export default userSlice.reducer

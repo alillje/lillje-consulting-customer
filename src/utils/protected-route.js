@@ -1,27 +1,31 @@
-import { useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
+import * as React from 'react'
+import { Navigate, Outlet } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
+/**
+ * Protected Route Component.
+ * Protects routes from unauthorized users.
+ *
+ * @returns {React.ReactElement} - Admin Route Component.
+ */
 const ProtectedRoute = () => {
-  // let auth = false;
-  
-  let auth = false;
-  let admin = false;
+  let auth = false
+  let admin = false
 
-  const state = useSelector((state) => state);
-// Check user  customer or admin or unauthorized
+  const state = useSelector((state) => state)
+  // Check user  customer/admin/unauthenticated
   if (state.user?.auth && !state.user.admin) {
-    auth = true;
+    auth = true
   } else if (state.user?.auth && state.user?.admin) {
-    admin = true;
+    admin = true
   }
   if (admin) {
-    return <Navigate to="/admin/dashboard" />;
+    return <Navigate to="/admin/dashboard" />
   } else if (!auth) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" />
   } else {
-    return <Outlet />;
+    return <Outlet />
   }
-};
+}
 
-export default ProtectedRoute;
+export default ProtectedRoute

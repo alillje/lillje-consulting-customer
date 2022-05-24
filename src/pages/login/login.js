@@ -1,77 +1,72 @@
-import "./login.css";
+/* eslint-disable camelcase */
+import './login.css'
+import * as React from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import jwt_decode from 'jwt-decode'
+import Topbar from '../../components/topbar/topbar'
+import { loginHandler } from '../../services/login-service'
 
-import * as React from "react";
-// Material Ui
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
+// Material UI components
+import Avatar from '@mui/material/Avatar'
+import Button from '@mui/material/Button'
+import CssBaseline from '@mui/material/CssBaseline'
+import TextField from '@mui/material/TextField'
+import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import LockTwoToneIcon from '@mui/icons-material/LockTwoTone'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 
-import { useState, useEffect } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
-import jwt_decode from "jwt-decode";
-import Topbar from "../../components/topbar/topbar";
-
-// Import redux config
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { loginHandler } from "../../services/login-service";
-
+/**
+ * Login Component.
+ * Represents the login page.
+ *
+ * @returns {React.ReactElement} - Login Component.
+ */
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [customer, setCustomer] = useState(false);
-  const [admin, setAdmin] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [customer, setCustomer] = useState(false)
+  const [admin, setAdmin] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const navigate = useNavigate()
 
   /**
-   * Handles login. Contacts auth service.
-   * Set state i redux.
+   * Handles login.
    *
-   * @param {Object} event - an event Object
+   * @param {object} event - an event Object
    */
   const handleLogin = async (event) => {
-    event.preventDefault();
-
+    event.preventDefault()
     const userData = {
       email: event.target.email.value,
-      password: event.target.password.value,
-    };
-
+      password: event.target.password.value
+    }
     try {
-      let authUser = await loginHandler(userData);
+      const authUser = await loginHandler(userData)
 
       if (jwt_decode(authUser?.access_token).admin) {
-        setAdmin(true);
+        setAdmin(true)
       } else {
-        setCustomer(true);
+        setCustomer(true)
       }
-
-      setEmail("");
-      setPassword("");
-      setErrorMessage("");
+      setEmail('')
+      setPassword('')
+      setErrorMessage('')
     } catch (error) {
-      setErrorMessage("Ogiltigt användarnamn eller lösenord");
+      setErrorMessage('Ogiltigt användarnamn eller lösenord')
     }
-  };
+  }
 
   useEffect(() => {
     if (admin) {
-      navigate("/admin/dashboard");
+      navigate('/admin/dashboard')
     } else if (customer) {
-      navigate("/dashboard");
+      navigate('/dashboard')
     }
-  }, [admin, customer, navigate]);
+  }, [admin, customer, navigate])
 
   return (
     <div className="loginLayoutContainer">
@@ -85,18 +80,12 @@ const Login = () => {
         <Box
           sx={{
             marginTop: 6,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
-          {errorMessage && (
-            <Alert className="loginError" severity="info">
-              <AlertTitle>Ett fel inträffade</AlertTitle>
-              {errorMessage}
-            </Alert>
-          )}
-          <Avatar sx={{ m: 1, bgcolor: "secondary" }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary' }}>
             <LockTwoToneIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -136,10 +125,17 @@ const Login = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, bgcolor: "#000428" }}
+              sx={{ mt: 3, mb: 2, bgcolor: '#000428' }}
             >
               Logga in
             </Button>
+            {errorMessage && (
+              <div className="loginErrorContainer">
+                <Alert className="loginError" severity="error">
+                  <AlertTitle>{errorMessage}</AlertTitle>
+                </Alert>
+              </div>
+            )}
             <Grid container>
               <Grid item xs></Grid>
               <Grid item></Grid>
@@ -149,7 +145,7 @@ const Login = () => {
       </div>
       <div className="loginLayoutRight"></div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
