@@ -62,7 +62,7 @@ const Transaction = () => {
           <AlertTitle>{location.state?.message}</AlertTitle>
         </Alert>
       )}
-      {loading ? <CircularProgress /> : <TransactionCard transaction={data} />}
+      {loading ? <div className="transactionLoadingSpinner"><CircularProgress /></div> : <TransactionCard transaction={data} />}
     </div>
   )
 }
