@@ -197,7 +197,11 @@ const TransactionForm = () => {
     vat
   ])
 
-  return loading ? (<CircularProgress />) : (
+  return loading ? (
+    <div className="transactionFormLoadingSpinner">
+  <CircularProgress />
+  </div>
+  ) : (
     <div>
       {errorMessage && (
         <Alert severity="warning" className="searchErrorMessage">
