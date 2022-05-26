@@ -129,7 +129,9 @@ const RegisterForm = () => {
   }
 
   return loading ? (
+    <div className="registerLoadingSpinner">
     <CircularProgress />
+    </div>
   ) : (
     <div>
       {errorMessage && (
