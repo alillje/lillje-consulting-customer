@@ -3,7 +3,7 @@
     height: 100%;
     display: grid;
     grid-template-columns: 1fr repeat(4, 1fr) 1fr;
-    grid-template-rows: 0.1fr repeat(5, 0.1fr) auto;
+    grid-template-rows: 0.1fr repeat(10, 0.1fr) auto;
     grid-column-gap: 20px;
     grid-row-gap: 20px;
   }
@@ -45,6 +45,13 @@
 @media screen and (max-width: 750px) {
   .mainLogin {
     grid-area: 2 / 1 / 8 / 7;
+    margin-left: 20px;
+  }
+}
+
+@media screen and (max-height: 1300px) {
+  .mainLogin {
+    grid-area: 2 / 1 / 10 / 7;
     margin-left: 20px;
   }
 }
