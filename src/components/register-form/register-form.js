@@ -29,7 +29,6 @@ const RegisterForm = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [allFieldsInput, setAllFieldsInput] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -38,27 +37,26 @@ const RegisterForm = () => {
 
   /**
    * Checks if all input is valid.
-   * Sets the state allFieldsInput(true), if all input is correct.
+   *
+   * @returns {boolean} - true if all input is valid, return false otherwise.
    */
   const checkFields = () => {
     if (password.length < 10) {
       setErrorMessage('Lösenordet måste bestå av minst 10 tecken')
-      setPassword('')
-      setConfirmPassword('')
+      return false
     }
 
     if (password !== confirmPassword) {
       setErrorMessage('Lösenorden stämmer inte överrens')
-      setPassword('')
-      setConfirmPassword('')
+      return false
     }
     if (/(\d{6}[-]\d{4})/.test(orgNo) === false) {
       setErrorMessage('Korrekt format på organisationsnummer är XXXXXX-XXXX')
+      return false
     }
     if (!validator.isEmail(email)) {
       setErrorMessage('Ange en korrekt mailadress')
-      setPassword('')
-      setConfirmPassword('')
+      return false
     }
 
     if (
@@ -71,8 +69,9 @@ const RegisterForm = () => {
       setErrorMessage(
         'Alla fält måste fyllas i för att kunna registrera en ny kund'
       )
+      return false
     } else {
-      setAllFieldsInput(true)
+      return true
     }
   }
 
@@ -98,7 +97,7 @@ const RegisterForm = () => {
     }
 
     // Only send request if all field input is valid.
-    if (allFieldsInput) {
+    if (checkFields()) {
       try {
         setLoading(true)
         const { data } = await axiosApiInstance.post(
