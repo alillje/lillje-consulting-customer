@@ -21,18 +21,18 @@ import Accordion from 'react-bootstrap/Accordion'
  * Transactions Component.
  * Represents the transactions page.
  *
- * @param {string} value - The type or status of transactions go get and display.
+ * @param {string} props - React props object.
  * @returns {React.ReactElement} - Transactions Component.
  */
-const Transactions = ({ value }) => {
+const Transactions = (props) => {
   const user = useSelector((state) => state.user)
   const customer = useSelector((state) => state.customer)
-  // const value = props.value ? props.value : null
+  const { value, initPage } = props
   const [status, setStatus] = useState('')
   const [resources, setResources] = useState([])
   const [loading, setLoading] = useState(false)
   const [pages, setPages] = useState(0)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(initPage)
   const limit = 10
   const apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?page=${page}&limit=${limit}`
   const dispatch = useDispatch()
@@ -136,18 +136,22 @@ const Transactions = ({ value }) => {
     switch (event.target.value) {
       case 'done':
         setStatus('true')
+        setPage(1)
         break
       case 'open':
         setStatus('false')
+        setPage(1)
         break
       default:
         setStatus('')
+        setPage(1)
     }
   }
 
   useEffect(() => {
+    setPage(initPage || page)
     getResources()
-  }, [page, value, status])
+  }, [props, initPage, page, value, status])
 
   return (
     <div className="resourceListContainer">

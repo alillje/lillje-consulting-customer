@@ -112,7 +112,7 @@ function App () {
           <Route
             exact
             path="/transactions/done"
-            element={<Layout><Transactions value="done" /></Layout>}
+            element={<Layout><Transactions value="done" initPage={'1'} /></Layout>}
           />
         </Route>
 
@@ -120,7 +120,7 @@ function App () {
           <Route
             exact
             path="/transactions/open"
-            element={<Layout><Transactions value="open" /></Layout>}
+            element={<Layout><Transactions value="open" initPage={'1'} /></Layout>}
           />
         </Route>
 
@@ -129,7 +129,7 @@ function App () {
             exact
             path="/transactions/leverantorsfakturor"
             element={
-              <Layout><Transactions value="leverantorsfakturor" /></Layout>
+              <Layout><Transactions value="leverantorsfakturor" initPage={'1'} /></Layout>
             }
           />
         </Route>
@@ -139,7 +139,7 @@ function App () {
             exact
             path="/transactions/kundfakturor"
             element={
-              <Layout><Transactions value="kundfakturor" /></Layout>
+              <Layout><Transactions value="kundfakturor" initPage={'1'} /></Layout>
             }
           />
         </Route>
@@ -148,7 +148,7 @@ function App () {
           <Route
             exact
             path="/transactions/utlagg"
-            element={<Layout><Transactions value="utlagg" /></Layout>}
+            element={<Layout><Transactions value="utlagg" initPage={'1'} /></Layout>}
           />
         </Route>
 
