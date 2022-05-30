@@ -31,7 +31,7 @@ const Transactions = ({ value }) => {
   const [resources, setResources] = useState([])
   const [loading, setLoading] = useState(false)
   const [pages, setPages] = useState(0)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(initPage)
   const limit = 10
   const apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?page=${page}&limit=${limit}`
   const dispatch = useDispatch()
@@ -138,18 +138,22 @@ const Transactions = ({ value }) => {
     switch (event.target.value) {
       case 'done':
         setStatus('true')
+        setPage(1)
         break
       case 'open':
         setStatus('false')
+        setPage(1)
         break
       default:
         setStatus('')
+        setPage(1)
     }
   }
 
   useEffect(() => {
+    setPage(initPage || page)
     getResources()
-  }, [page, value, status])
+  }, [props, initPage, page, value, status])
 
   return (
     <div className="resourceListContainer">
