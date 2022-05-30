@@ -76,3 +76,13 @@ justify-content: center;
     margin-top: 100px;
     margin-bottom: 100px;
 }
+
+.transactionsHiddenPagination {
+    grid-row: 6; 
+    grid-column: 1 / 4;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
