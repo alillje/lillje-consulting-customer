@@ -21,18 +21,17 @@ import Accordion from 'react-bootstrap/Accordion'
  * Transactions Component.
  * Represents the transactions page.
  *
- * @param {string} props - React props object.
+ * @param {string} value - The type or category of transactions to view.
  * @returns {React.ReactElement} - Transactions Component.
  */
-const Transactions = (props) => {
+const Transactions = ({ value }) => {
   const user = useSelector((state) => state.user)
   const customer = useSelector((state) => state.customer)
-  const { value, initPage } = props
   const [status, setStatus] = useState('')
   const [resources, setResources] = useState([])
   const [loading, setLoading] = useState(false)
   const [pages, setPages] = useState(0)
-  const [page, setPage] = useState(initPage)
+  const [page, setPage] = useState(1)
   const limit = 10
   const apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?page=${page}&limit=${limit}`
   const dispatch = useDispatch()
@@ -68,10 +67,13 @@ const Transactions = (props) => {
     // Get resources/transactions based on url params/queries
     try {
       setLoading(true)
-      const { data } = await axiosApiInstance.get(url, config)
 
+      const { data } = await axiosApiInstance.get(url, config)
       setResources(data.resources)
       setPages(data.pages)
+      if (data.pages <= 1) {
+        setPage(1)
+      }
       dispatch(
         setTransactions({
           transactions: data.resources,
@@ -136,22 +138,18 @@ const Transactions = (props) => {
     switch (event.target.value) {
       case 'done':
         setStatus('true')
-        setPage(1)
         break
       case 'open':
         setStatus('false')
-        setPage(1)
         break
       default:
         setStatus('')
-        setPage(1)
     }
   }
 
   useEffect(() => {
-    setPage(initPage || page)
     getResources()
-  }, [props, initPage, page, value, status])
+  }, [page, value, status])
 
   return (
     <div className="resourceListContainer">
@@ -164,7 +162,7 @@ const Transactions = (props) => {
           {value === 'all' && <h2>Alla transaktioner</h2>}
           {value === 'done' && <h2>Hanterade transaktioner</h2>}
           {value === 'open' && <h2>Ohanterade transaktioner</h2>}
-          {value === 'leverantorsfakturor' && <h2>Leveranörsfakturor</h2>}
+          {value === 'leverantorsfakturor' && <h2>Leverantörsfakturor</h2>}
           {value === 'kundfakturor' && <h2>Kundfakturor</h2>}
           {value === 'utlagg' && <h2>Utlägg</h2>}
         </div>
@@ -232,13 +230,13 @@ const Transactions = (props) => {
         </div>
       )}
 
-      {pages > 0 && (
+      {!loading && pages > 0 ? (
         <div className="transactionsPagination">
           <Stack spacing={2}>
-            <Pagination onChange={setPagination} count={pages} size="large" />
+            <Pagination onChange={setPagination} page={page} count={pages} size="large" />
           </Stack>
-        </div>
-      )}
+        </div>) : (<div className=".transactionsHiddenPagination"></div>)
+      }
     </div>
   )
 }
