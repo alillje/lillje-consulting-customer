@@ -98,7 +98,7 @@ function App () {
           <Route
             exact
             path="/transactions"
-            element={<Layout><Transactions value="all" /></Layout>}
+            element={<Layout><Transactions value="all" initPage={'1'} /></Layout>}
           />
         </Route>
         <Route element={<ProtectedRoute />}>
