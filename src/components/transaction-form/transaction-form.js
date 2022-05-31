@@ -318,7 +318,6 @@ const TransactionForm = () => {
           accept="application/pdf"
           onChange={(e) => setFile(e.target.files[0])}
           id="validationFormik107"
-          feedbackTooltip
           required
         />
 

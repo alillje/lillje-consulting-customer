@@ -43,7 +43,7 @@ export default function SearchForm () {
   const [pages, setPages] = useState(0)
   const [page, setPage] = useState(1)
   const limit = 10
-  let apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources`
+  let apiUrl = `${process.env.REACT_APP_RESOURCE_API}/resources?page=${page}&limit=${limit}`
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -67,7 +67,7 @@ export default function SearchForm () {
       dateSanitized.length > 0 &&
       transactionTypeSanitized.length > 0
     ) {
-      url = `${apiUrl}?company=${companySanitized.replace(
+      url = `${apiUrl}&company=${companySanitized.replace(
         ' ',
         '+'
       )}&invoiceDate=${
@@ -75,11 +75,11 @@ export default function SearchForm () {
       }&transactionType=${transactionTypeSanitized}`
       setMinParams(true)
     } else if (companySanitized.length > 0) {
-      url = `${apiUrl}?company=${companySanitized.replace(' ', '+')}`
+      url = `${apiUrl}&company=${companySanitized.replace(' ', '+')}`
     } else if (dateSanitized.length > 0) {
-      url = `${apiUrl}?invoiceDate=${new Date(dateSanitized).getTime() / 1000}`
+      url = `${apiUrl}&invoiceDate=${new Date(dateSanitized).getTime() / 1000}`
     } else if (transactionType.length > 0) {
-      url = `${apiUrl}?transactionType=${transactionTypeSanitized}`
+      url = `${apiUrl}&transactionType=${transactionTypeSanitized}`
     }
     if (user.admin) {
       url = `${url}&author=${stateCustomer.id}`
@@ -94,7 +94,9 @@ export default function SearchForm () {
    * @param {object} event - An event object
    */
   const performSearch = async (event) => {
-    event.preventDefault()
+    if (event) {
+      event.preventDefault()
+    }
     // Sanitize html and set search params
     const companySanitized = validator.escape(company)
     const dateSanitized = validator.escape(date)
@@ -169,6 +171,7 @@ export default function SearchForm () {
     setCompleteSearch(false)
     setMinParams(false)
     setCompany('')
+    setPage(1)
   }
 
   /**
@@ -180,19 +183,23 @@ export default function SearchForm () {
     if (event.target.getAttribute('data-testid') === 'NavigateBeforeIcon') {
       const prevPage = page - 1
       setPage(prevPage)
+      performSearch()
     } else if (event.target.getAttribute('aria-label') === 'Go to next page') {
       const prevPage = page - 1
       setPage(prevPage)
+      performSearch()
     } else if (
       event.target.getAttribute('data-testid') === 'NavigateNextIcon'
     ) {
       const prevPage = page + 1
       setPage(prevPage)
+      performSearch()
     } else if (
       event.target.getAttribute('aria-label') === 'Go to previous page'
     ) {
       const prevPage = page - 1
       setPage(prevPage)
+      performSearch()
     } else {
       setPage(parseInt(event.target.textContent))
     }
@@ -208,7 +215,10 @@ export default function SearchForm () {
     if (transactionType.length > 0) {
       setMinParams(true)
     }
-  }, [minParams, company, date, page, transactionType])
+    if (pages > 1 && completeSearch) {
+      performSearch()
+    }
+  }, [minParams, company, date, page, pages, transactionType])
 
   if (loading) {
     return (
@@ -267,7 +277,7 @@ export default function SearchForm () {
         </div>
         <div className="searchResPagination">
           <Stack spacing={2}>
-            <Pagination onChange={setPagination} count={pages} size="large" />
+            <Pagination onChange={setPagination} page={page} count={pages} size="large" />
           </Stack>
         </div>
         <div className="newSearch">

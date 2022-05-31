@@ -159,6 +159,7 @@ const RegisterForm = () => {
           value={company}
           onChange={(event) => setCompany(event.target.value)}
           required
+          autoComplete="new-company"
         />
 
         <TextField
@@ -169,6 +170,7 @@ const RegisterForm = () => {
           value={orgNo}
           onChange={(event) => setOrgNo(event.target.value)}
           required
+          autoComplete="new-orgno"
         />
         <TextField
           helperText="Företagets epostaddress"
@@ -178,6 +180,7 @@ const RegisterForm = () => {
           label="Email"
           variant="outlined"
           required
+          autoComplete="new-email"
         />
 
         <TextField
@@ -189,6 +192,7 @@ const RegisterForm = () => {
           variant="outlined"
           type="password"
           required
+          autoComplete="new-password"
         />
 
         <TextField
@@ -200,6 +204,7 @@ const RegisterForm = () => {
           variant="outlined"
           type="password"
           required
+          autoComplete="new-password"
         />
 
         <Button type="submit">Registrera</Button>
