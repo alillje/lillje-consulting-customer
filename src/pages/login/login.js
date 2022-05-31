@@ -108,6 +108,7 @@ const Login = () => {
               name="email"
               label="Email"
               autoFocus
+              autoComplete="current-email"
             />
             <TextField
               margin="normal"
