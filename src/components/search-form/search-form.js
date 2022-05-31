@@ -180,19 +180,23 @@ export default function SearchForm () {
     if (event.target.getAttribute('data-testid') === 'NavigateBeforeIcon') {
       const prevPage = page - 1
       setPage(prevPage)
+      performSearch()
     } else if (event.target.getAttribute('aria-label') === 'Go to next page') {
       const prevPage = page - 1
       setPage(prevPage)
+      performSearch()
     } else if (
       event.target.getAttribute('data-testid') === 'NavigateNextIcon'
     ) {
       const prevPage = page + 1
       setPage(prevPage)
+      performSearch()
     } else if (
       event.target.getAttribute('aria-label') === 'Go to previous page'
     ) {
       const prevPage = page - 1
       setPage(prevPage)
+      performSearch()
     } else {
       setPage(parseInt(event.target.textContent))
     }
