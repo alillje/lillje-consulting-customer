@@ -74,6 +74,28 @@ export default function SearchForm () {
         new Date(dateSanitized).getTime() / 1000
       }&transactionType=${transactionTypeSanitized}`
       setMinParams(true)
+    } else if (companySanitized.length > 0 && dateSanitized.length > 0) {
+      url = `${apiUrl}&company=${companySanitized.replace(
+        ' ',
+        '+'
+      )}&invoiceDate=${
+        new Date(dateSanitized).getTime() / 1000
+      }`
+    } else if (transactionTypeSanitized.length > 0 && dateSanitized.length > 0) {
+      url = `${apiUrl}&transactionType=${transactionTypeSanitized}&invoiceDate=${
+        new Date(dateSanitized).getTime() / 1000
+      }`
+    } else if (companySanitized.length > 0 && transactionTypeSanitized.length > 0) {
+      url = `${apiUrl}&company=${companySanitized.replace(
+        ' ',
+        '+'
+      )}&transactionType=${transactionTypeSanitized}`
+      setMinParams(true)
+    } else if (companySanitized.length > 0 && dateSanitized.length > 0) {
+      url = `${apiUrl}&company=${companySanitized.replace(
+        ' ',
+        '+'
+      )}`
     } else if (companySanitized.length > 0) {
       url = `${apiUrl}&company=${companySanitized.replace(' ', '+')}`
     } else if (dateSanitized.length > 0) {
@@ -84,7 +106,7 @@ export default function SearchForm () {
     if (user.admin) {
       url = `${url}&author=${stateCustomer.id}`
     }
-
+    console.log(url)
     return url
   }
 
@@ -109,7 +131,7 @@ export default function SearchForm () {
     )
 
     if (url) {
-      apiUrl = `${url}&limit=${limit}`
+      apiUrl = url
       setMinParams(true)
     }
     if (minParams) {
@@ -243,7 +265,6 @@ export default function SearchForm () {
                     data={transaction.author}
                   >
                     <Accordion.Header>
-                      {user.admin && `${stateCustomer?.company} - `}
                       {dayjs
                         .unix(transaction?.invoiceDate)
                         .format('YYYY/MM/DD')}
