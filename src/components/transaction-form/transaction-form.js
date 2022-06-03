@@ -85,6 +85,7 @@ const TransactionForm = () => {
     let validFileFormat = false
     let validFileSize = false
     let amountIsNumber = false
+    let dateIsValid = false
 
     // Check filetype and file size
     if (file) {
@@ -98,9 +99,13 @@ const TransactionForm = () => {
       if (!isNaN(parseInt(amountExVat))) {
         amountIsNumber = true
       }
+      // Check date is valid
+      if (validator.isDate(date)) {
+        dateIsValid = true
+      }
     }
     // Only send request if input is valid
-    if (minParams && validFileFormat && validFileSize && amountIsNumber) {
+    if (minParams && validFileFormat && validFileSize && amountIsNumber && dateIsValid) {
       const reqBody = {
         description: validator.escape(description),
         authorName: user.company,
@@ -155,6 +160,9 @@ const TransactionForm = () => {
       setLoading(false)
     } else if (!validFileSize) {
       setErrorMessage('Maxstorlek för bifogad fil är 2MB')
+      setLoading(false)
+    } else if (!validator.isDate(date)) {
+      setErrorMessage('Ange ett korrekt datum i formatet ÅÅÅÅ-MM-DD')
       setLoading(false)
     } else {
       setErrorMessage(
